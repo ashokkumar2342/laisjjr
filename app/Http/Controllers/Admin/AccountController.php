@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Helper\MyFuncs;
 use App\Helper\SelectBox;
 use Session;
+use Auth;
 class AccountController extends Controller
 {
     protected $e_controller = "AccountController";
