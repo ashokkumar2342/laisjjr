@@ -3,9 +3,9 @@ var full_url_js=(("https:"==document.location.protocol?"https://":"http://")+win
 (function() {
     const idleDurationSecs = 1200;
     //Local Setting
-    const redirectUrl = full_url_js+'/duty_management_system/public/admin/logout_time';
+    const redirectUrl = full_url_js+'/laisjjr/public/admin/logout_time';
     //Live EDMS
-    // const redirectUrl = full_url_js+'/edms/public/admin/logout_time';
+    // const redirectUrl = full_url_js+'/admin/logout_time';
     //Staging EDMS
     // const redirectUrl = full_url_js+'/stageedms/public/admin/logout_time';
     

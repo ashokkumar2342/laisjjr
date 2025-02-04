@@ -8,12 +8,12 @@
           
     </ul>
     @php
-       $admin=Auth::guard('admin')->user();
+       $admin = Auth::guard('admin')->user();
        $rs_fetch = Illuminate\Support\Facades\DB::select(DB::raw("SELECT `name` from `roles` where `id` = $admin->role_id limit 1;"));
      @endphp 
     <ul class="navbar-nav ml-auto">       
       <li class="nav-item">
-        <strong style="color:#fff;margin-top: 10px">Welcome : <span style="color:#28a745">{{$admin->user_name}}</span> :: <span style="color:#28a745">{{@$rs_fetch[0]->name}}</span></strong>
+        <strong style="color:#fff;margin-top: 10px">Welcome : <span style="color:#28a745">{{$admin->name}}</span> :: <span style="color:#28a745">{{@$rs_fetch[0]->name}}</span></strong>
         <a class="btn btn-lg" title="Logout" id="btn_logout" href="{{ route('admin.logout.get') }}"
                         onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">

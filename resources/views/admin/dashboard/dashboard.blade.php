@@ -18,10 +18,10 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-6">
                 <div class="small-box" style="background: #109618;color:#fff;">
                     <div class="inner">
-                        <h3>1000</h3>
+                        <h3>{{$d_count}}</h3>
                         <p>District</p>
                     </div>
                     <div class="icon">
@@ -30,23 +30,11 @@
                     <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box" style="background: #990099; color:#fff;">
-                    <div class="inner">
-                        <h3>1000</h3>
-                        <p>Block</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa fa-user-home"></i>
-                    </div>
-                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-6">
                 <div class="small-box" style="background: #ff9900;">
                     <div class="inner">
-                        <h3>1000</h3>
-                        <p>Village</p>
+                        <h3>{{$d_count}}</h3>
+                        <p>Tehsil</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-home"></i>
@@ -54,11 +42,11 @@
                     <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <div class="col-lg-3 col-6">
+            <div class="col-lg-4 col-6">
                 <div class="small-box" style="background: #dc3912;color:#fff;">
                     <div class="inner">
-                        <h3>1000</h3>
-                        <p>Ward</p>
+                        <h3>{{$d_count}}</h3>
+                        <p>Village</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-home"></i>
