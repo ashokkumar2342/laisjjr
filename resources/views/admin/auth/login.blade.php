@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>DUTY MANAGEMENT | Log in</title>
+    <title>L. A. I. S. JHAJJAR | Log in</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('admin_asset/plugins/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{ asset('admin_asset/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
@@ -12,9 +12,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('admin_asset/dist/css/toastr.min.css')}}">
 </head>
 <style type="text/css">
-    .card{
+    /*.card{
         border-radius:1rem;
-    }
+    }*/
     .form-control{
         border-radius:1rem;  
     }
@@ -33,10 +33,10 @@ Session::put('CryptoRandomInfo',App\Helper\MyFuncs::generateRandomIV());
 <body class="hold-transition login-page bg-navy" style="background:url('{{ asset('images/bg.jpg') }}');background-repeat: no-repeat;background-size: cover;background-position: center;">
     <div class="login-box" style="">
         <div class="card">
-            <div class="card-header text-center pt-4">
-                {{-- <h2><strong>EAGESKOOL</strong></h2> --}}
+            <div class="card-header pt-4">
                 <img src="{{ asset('images/nic_logo.png')}}" alt="" style="text-align: center;width: 320px;padding-bottom: 20px;height: 70px">
-                <img src="{{ asset('images/Capture.JPG')}}" alt="" style="text-align: center;width: 320px;padding-bottom: 20px;">
+                <img src="{{ asset('temp_1/img/0_1HRGov.png')}}" alt="logo" style="height: 50px;width: 50px;margin-bottom: 10px;">
+                <strong style="font-size:25px;color:black;">&nbsp; &nbsp; L. A. I. S. JHAJJAR</strong>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.login.post') }}" method="post" class="add_form" autocomplete="off" onsubmit="return hashPasswordEncryption();">

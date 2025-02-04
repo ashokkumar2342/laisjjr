@@ -10,23 +10,10 @@
 <div class="slider1-area overlay-default">
     <div class="bend niceties preview-1">
         <div id="ensign-nivoslider-3" class="slides">
-            <img src="{{ asset('temp_1/img/slider/1.jpg') }}" alt="slider" title="#slider-direction-1" />
-            {{-- <img src="{{ asset('temp_1/img/slider/2.jpg') }}" alt="slider" title="#slider-direction-2" /> --}}
-            {{-- <img src="{{ asset('temp_1/img/slider/3.jpg') }}" alt="slider" title="#slider-direction-3" /> --}}
-        </div>
-        <div id="slider-direction-1" class="t-cn slider-direction">
-            <div class="slider-content s-tb slide-1">
-                <div class="title-container s-tb-c">
-                    <div class="title1">Best Education For UI Design</div>
-                    <p>Emply dummy text of the printing and typesetting industry orem Ipsum has been the industry's standard
-                        <br>dummy text ever sinceprinting and typesetting industry. </p>
-                    {{-- <div class="slider-btn-area">
-                        <a href="#" class="default-big-btn">Start a Course</a>
-                    </div> --}}
-                </div>
-            </div>
-        </div>
-        
+            <img src="{{ asset('temp_1/img/slider/4.jpeg') }}" alt="slider">
+            <img src="{{ asset('temp_1/img/slider/5.jpeg') }}" alt="slider">
+            <img src="{{ asset('temp_1/img/slider/6.jpeg') }}" alt="slider">
+        </div>        
     </div>
 </div>
 <!-- Slider 1 Area End Here -->

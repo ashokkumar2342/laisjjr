@@ -76,12 +76,17 @@
                 <div class="main-menu-area bg-textPrimary" id="sticker">
                     <div class="container">
                         <div class="row">
-                            <div class="col-xl-2 col-lg-2 col-md-3">
+                            <div class="col-xl-1 col-lg-1 col-md-1" style="margin-top: -5px;">
                                 <div class="logo-area">
-                                    <a href="{{ route('template.index') }}"><img class="img-responsive" src="{{ asset('temp_1/img/logo-primary.png')}}" alt="logo"></a>
+                                    <a href="{{ route('template.index') }}"><img class="img-responsive" src="{{ asset('temp_1/img/0_1HRGov.png')}}" alt="logo" style="height: 60px;width: 60px;"></a>
                                 </div>
                             </div>
-                            <div class="col-xl-9 col-lg-9 col-md-9">
+                            <div class="col-xl-3 col-lg-3 col-md-3" style="margin-top: 15px;">
+                                <div class="logo-area">
+                                      <strong style="font-size:22px;">L. A. I. S. JHAJJAR</strong>
+                                </div>
+                            </div>
+                            <div class="col-xl-8 col-lg-8 col-md-8">
                                 <nav id="desktop-nav">
                                     <ul>
                                         <li><a href="{{ route('template.index') }}"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>

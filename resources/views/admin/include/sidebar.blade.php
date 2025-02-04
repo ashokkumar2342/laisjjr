@@ -1,7 +1,5 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#001f3f ">
-  <a href="{{ route('admin.dashboard') }}" class="brand-link logo-switch text-center" style="background-color:#fff;border:solid black;">
-  <img src="{{ asset('images/edms-removebg-preview.png') }}" alt="" style="text-align: center;width: 220px;height: 38px"> 
-  </a>
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#001f3f">
+  <a href="{{ route('admin.dashboard') }}" class="brand-link logo-switch text-center"><strong>L.A.I.S. JHAJJAR</strong></a>
   <div class="sidebar">
     <div class="mt-2">
       <nav class="mt-2">
