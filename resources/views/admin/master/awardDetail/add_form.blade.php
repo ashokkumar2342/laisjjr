@@ -12,17 +12,22 @@
                 <div class="box-body">
                     <input type="hidden" name="scheme_award_info_id" value="{{Crypt::encrypt($scheme_award_info_id)}}">
                     <div class="row">
-                        <div class="col-lg-4 form-group">
+                        <div class="col-lg-6 form-group">
                             <label>Khewat No.</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="khewat_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khewat_no}}"> 
                         </div>
-                        <div class="col-lg-4 form-group">
+                        <div class="col-lg-6 form-group">
                             <label>Khata No.</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="khata_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khata_no}}"> 
                         </div>
-                        <div class="col-lg-4 form-group">
+                        <div class="col-lg-6 form-group">
+                            <label>Mustil No.</label>
+                            <span class="fa fa-asterisk"></span>
+                            <input type="text" name="mustil_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->mustil_no}}"> 
+                        </div>
+                        <div class="col-lg-6 form-group">
                             <label>Khasra No.</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="khasra_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khasra_no}}"> 
@@ -53,22 +58,25 @@
                         <div class="col-lg-6 form-group">
                             <label>Value</label>
                             <span class="fa fa-asterisk"></span>
-                            <input type="text" name="value" class="form-control" maxlength="12" required value="{{@$rs_records[0]->value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
+                            <input type="text" name="value" class="form-control sum-input" maxlength="12" required value="{{@$rs_records[0]->value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
                         </div>
                         <div class="col-lg-6 form-group">
                             <label>Factor Value</label>
                             <span class="fa fa-asterisk"></span>
-                            <input type="text" name="factor_value" class="form-control" maxlength="12" required value="{{@$rs_records[0]->factor_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
+                            <input type="text" name="factor_value" class="form-control sum-input" maxlength="12" required value="{{@$rs_records[0]->factor_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
                         </div>
                         <div class="col-lg-6 form-group">
                             <label>Solatium Value</label>
                             <span class="fa fa-asterisk"></span>
-                            <input type="text" name="solatium_value" class="form-control" maxlength="12" required value="{{@$rs_records[0]->solatium_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
+                            <input type="text" name="solatium_value" class="form-control sum-input" maxlength="12" required value="{{@$rs_records[0]->solatium_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
                         </div>
                         <div class="col-lg-6 form-group">
                             <label>Additional Charge Value</label>
                             <span class="fa fa-asterisk"></span>
-                            <input type="text" name="additional_charge_value" class="form-control" maxlength="12" required value="{{@$rs_records[0]->additional_charge_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
+                            <input type="text" name="additional_charge_value" class="form-control sum-input" maxlength="12" required value="{{@$rs_records[0]->additional_charge_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
+                        </div>
+                        <div class="col-lg-12 form-group">
+                            <p><strong>Total: <span id="total"></span></strong></p>
                         </div>
                     </div>            
                 </div>
@@ -81,21 +89,32 @@
     </div>
 </div>
 <script>
-        function changeLabel() {
-            var selectedOption = document.getElementById("unit").value;
-            var label1 = document.getElementById("label1");
-            var label2 = document.getElementById("label2");
-            var label3 = document.getElementById("label3");
+    function changeLabel() {
+        var selectedOption = document.getElementById("unit").value;
+        var label1 = document.getElementById("label1");
+        var label2 = document.getElementById("label2");
+        var label3 = document.getElementById("label3");
 
-            if (selectedOption == 1) {
-                label1.textContent = "Kanal";
-                label2.textContent = "Marla";
-                label3.textContent = "Sirsai";
-            }else if (selectedOption == 2) {
-                label1.textContent = "Bigha";
-                label2.textContent = "Biswa";
-                label3.textContent = "Birsai";
-            }
+        if (selectedOption == 1) {
+            label1.textContent = "Kanal";
+            label2.textContent = "Marla";
+            label3.textContent = "Sirsai";
+        }else if (selectedOption == 2) {
+            label1.textContent = "Bigha";
+            label2.textContent = "Biswa";
+            label3.textContent = "Birsai";
         }
-    </script>
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $(".sum-input").keyup(function () {
+            let sum = 0;
+            $(".sum-input").each(function () {
+                sum += parseFloat($(this).val()) || 0; // Convert to number, default to 0 if empty
+            });
+            $("#total").text(sum);
+        });
+    });
+</script>
 

@@ -11,6 +11,7 @@
                         <th>Sr. No.</th>                
                         <th>Khewat No.</th>
                         <th>Khata No.</th>
+                        <th>Mustil No.</th>
                         <th>Khasra No.</th>
                         <th>Unit</th>
                         <th>Area</th>
@@ -27,14 +28,17 @@
                     @endphp
                     @foreach($rs_records as $value)
                     <tr>
-                        <td>
+                        <td class="text-nowrap">
                             @if ($value->status < 2)
                                 <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt($value->id)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val())"><i class="fa fa-edit"></i> Edit</button>
+
+                                <button type="button" class="btn btn-sm btn-danger" select-triger="scheme_award_select_box" success-popup="true" onclick="if (confirm('Are you sure you want to delete this record?')){callAjax(this,'{{ route('admin.master.award.detail.delete', Crypt::encrypt($value->id)) }}') } else{console_Log('cancel') }">Delete</button>
                             @endif
                         </td>
                         <td>{{ $sr_no++ }}</td>
                         <td>{{ $value->khewat_no }}</td>
                         <td>{{ $value->khata_no }}</td>
+                        <td>{{ $value->mustil_no }}</td>
                         <td>{{ $value->khasra_no }}</td>
                         <td>{{ $value->unit==1?'Kanal Marla':'Bigha Biswa'}}</td>
                         <td>{{ $value->kanal }} - {{ $value->marla }} - {{ $value->sirsai }}</td>

@@ -736,9 +736,9 @@ class MasterController extends Controller
     { 
         try {
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
-            $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`khasra_no`, `ad`.`unit`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
+            $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
             return view('admin.master.awardDetail.table',compact('rs_records'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e_method = "awardDetailTable";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
@@ -770,6 +770,7 @@ class MasterController extends Controller
                 'scheme_award_info_id' => 'required',
                 'khewat_no' => 'required',
                 'khata_no' => 'required',
+                'mustil_no' => 'required',
                 'khasra_no' => 'required',
                 'unit' => 'required',
                 'kanal' => 'required',
@@ -796,6 +797,7 @@ class MasterController extends Controller
             $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info_id));
             $khewat_no = substr(MyFuncs::removeSpacialChr($request->khewat_no), 0, 10);
             $khata_no = substr(MyFuncs::removeSpacialChr($request->khata_no), 0, 10);
+            $mustil_no = substr(MyFuncs::removeSpacialChr($request->mustil_no), 0, 10);
             $khasra_no = substr(MyFuncs::removeSpacialChr($request->khasra_no), 0, 10);
             $unit = intval($request->unit);
             $kanal = substr(MyFuncs::removeSpacialChr($request->kanal), 0, 4);
@@ -805,6 +807,7 @@ class MasterController extends Controller
             $factor_value = floatval(MyFuncs::removeSpacialChr($request->factor_value));
             $solatium_value = floatval(MyFuncs::removeSpacialChr($request->solatium_value));
             $additional_charge_value = floatval(MyFuncs::removeSpacialChr($request->additional_charge_value));
+            $total_value = $value+$factor_value+$solatium_value+$additional_charge_value;
 
             if ($rec_id == 0) {
                 $rs_save = DB::select(DB::raw("INSERT into `award_detail` (`scheme_award_info_id`, `khewat_no`, `khata_no`, `khasra_no`, `unit`, `kanal`, `marla`, `sirsai`, `value`, `factor_value`, `solatium_value`, `additional_charge_value`) values ('$scheme_award_info_id', '$khewat_no', '$khata_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value');"));
@@ -816,6 +819,19 @@ class MasterController extends Controller
             return response()->json($response);
         } catch (Exception $e) {
             $e_method = "awardDetailStore";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
+    public function awardDetailDelete($rec_id)
+    {
+        try {
+            $rec_id = intval(Crypt::decrypt($rec_id));
+            $rs_save = DB::select(DB::raw("UPDATE `award_detail` set `status` = 3 where `id` = $rec_id limit 1;"));
+            $response=['status'=>1,'msg'=>'Deleted Successfully'];
+            return response()->json($response);   
+        } catch (\Exception $e) {
+            $e_method = "awardDetailDelete";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
     }

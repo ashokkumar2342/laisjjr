@@ -1,6 +1,6 @@
 <div class="col-lg-12 text-right">
     @if ($scheme_id > 0)
-        <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.award.addform', Crypt::encrypt(0)) }}'+'?scheme={{Crypt::encrypt($scheme_id)}}'">Create Scheme/Award Village Detail</button>
+        <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.award.addform', Crypt::encrypt(0)) }}'+'?scheme={{Crypt::encrypt($scheme_id)}}')">Create Scheme/Award Village Detail</button>
     @endif
 </div>
 <div class="col-lg-12">

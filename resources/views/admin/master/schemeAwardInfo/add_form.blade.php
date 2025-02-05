@@ -51,7 +51,7 @@
                     <div class="form-group">
                         <label>Jamabandi Year (YYYY-YYYY)</label>
                         <span class="fa fa-asterisk"></span>
-                        <input type="text" name="year" class="form-control" placeholder="DD-MM-YYYY" value="{{@$rs_records[0]->year}}" maxlength="10" required onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 45) || (event.charCode == 47)'>
+                        <input type="text" name="year" class="form-control" placeholder="YYYY-YYYY" value="{{@$rs_records[0]->year}}" maxlength="10" required onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 45) || (event.charCode == 47)'>
                     </div>              
                 </div>
                 <div class="modal-footer card-footer justify-content-between">
