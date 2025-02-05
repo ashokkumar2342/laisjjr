@@ -1,5 +1,7 @@
 <div class="col-lg-12 text-right">
-    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt(0)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val())">Add Award Land Detail</button>
+    @if ($scheme_award_info_id > 0)
+        <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt(0)) }}'+'?scheme_award_info={{Crypt::encrypt($scheme_award_info_id)}}')">Add Award Land Detail</button>
+    @endif
 </div>
 <div class="col-lg-12">
     <fieldset class="fieldset_border">
@@ -30,7 +32,7 @@
                     <tr>
                         <td class="text-nowrap">
                             @if ($value->status < 2)
-                                <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt($value->id)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val())"><i class="fa fa-edit"></i> Edit</button>
+                                <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
 
                                 <button type="button" class="btn btn-sm btn-danger" select-triger="scheme_award_select_box" success-popup="true" onclick="if (confirm('Are you sure you want to delete this record?')){callAjax(this,'{{ route('admin.master.award.detail.delete', Crypt::encrypt($value->id)) }}') } else{console_Log('cancel') }">Delete</button>
                             @endif

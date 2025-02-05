@@ -51,14 +51,14 @@
                             <input type="text" name="marla" class="form-control" maxlength="5" required value="{{@$rs_records[0]->marla}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
                         </div>
                         <div class="col-lg-4 form-group">
-                            <label id="label3">Sirsai</label>
+                            <label id="label3">Sarsai</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="sirsai" class="form-control" maxlength="5" required value="{{@$rs_records[0]->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
                         </div>
                         <div class="col-lg-6 form-group">
-                            <label>Value</label>
+                            <label>Land Value</label>
                             <span class="fa fa-asterisk"></span>
-                            <input type="text" name="value" class="form-control sum-input" maxlength="12" required value="{{@$rs_records[0]->value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
+                            <input type="text" name="value" class="form-control" maxlength="12" required value="{{@$rs_records[0]->value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
                         </div>
                         <div class="col-lg-6 form-group">
                             <label>Factor Value</label>
@@ -98,11 +98,11 @@
         if (selectedOption == 1) {
             label1.textContent = "Kanal";
             label2.textContent = "Marla";
-            label3.textContent = "Sirsai";
+            label3.textContent = "Sarsai";
         }else if (selectedOption == 2) {
             label1.textContent = "Bigha";
             label2.textContent = "Biswa";
-            label3.textContent = "Birsai";
+            label3.textContent = "Biswansi";
         }
     }
 </script>

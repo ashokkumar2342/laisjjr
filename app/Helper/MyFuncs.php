@@ -260,6 +260,33 @@ class MyFuncs {
     return $result;
   }
 
+  public static function check_scheme_info_village_access($scheme_info_id)
+  { 
+    $user_id = MyFuncs::getUserId();
+    $role_id = MyFuncs::getUserRoleId();
+    $result = 0;
+
+    if($role_id == 1){
+      $result = 1;
+    }elseif($role_id == 2){
+      $result_rs = DB::select(DB::raw("SELECT `id` from `scheme_award_info` where `id` = $scheme_info_id and `district_id` in (select `district_id` from `user_district_assigns` where `user_id` = $user_id and `status` = 1) limit 1;"));
+      if(count($result_rs) > 0){
+        $result = 1;
+      }
+    }elseif($role_id == 3){
+      $result_rs = DB::select(DB::raw("SELECT `id` from `scheme_award_info` where `id` = $scheme_info_id and `tehsil_id` in (select `tehsils_id` from `user_tehsil_assigns` where `user_id` = $user_id and `status` = 1) limit 1;"));
+      if(count($result_rs) > 0){
+        $result = 1;
+      }
+    }elseif($role_id == 4){
+      $result_rs = DB::select(DB::raw("SELECT `id` from `scheme_award_info` where `id` = $scheme_info_id and `village_id` in (select `village_id` from `user_village_assigns` where `user_id` = $user_id and `status` = 1) limit 1;"));
+      if(count($result_rs) > 0){
+        $result = 1;
+      }
+    }
+    return $result;
+  }
+
   public static function isPermission_reports($role_id, $report_id)
   { 
     $rs_fetch = DB::select(DB::raw("SELECT * from `report_types` where `report_id` = $report_id and `report_for` = $role_id limit 1;"));

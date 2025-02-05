@@ -736,8 +736,12 @@ class MasterController extends Controller
     { 
         try {
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $scheme_award_info_id = 0;
+            }
             $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
-            return view('admin.master.awardDetail.table',compact('rs_records'));
+            return view('admin.master.awardDetail.table',compact('rs_records', 'scheme_award_info_id'));
         } catch (Exception $e) {
             $e_method = "awardDetailTable";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -747,13 +751,23 @@ class MasterController extends Controller
     public function awardDetailAddForm(Request $request, $rec_id)
     { 
         try {
-            
-            if ($request->scheme_award_info == 'null') {
-                $error_message = 'Please Select Scheme Awerd';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
             $rec_id = intval(Crypt::decrypt($rec_id));
-            $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
+            if($rec_id == 0){
+                $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));    
+            }else{
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $rec_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }    
+            }
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $error_message = 'Something Went Wrong';
+                return view('admin.common.error_popup', compact('error_message'));    
+            }
+
+            
             $rs_records = DB::select(DB::raw("SELECT * from `award_detail` where `id` =  $rec_id limit 1;"));
             return view('admin.master.awardDetail.add_form',compact('rs_records', 'rec_id', 'scheme_award_info_id'));
         } catch (Exception $e) {
@@ -809,13 +823,29 @@ class MasterController extends Controller
             $additional_charge_value = floatval(MyFuncs::removeSpacialChr($request->additional_charge_value));
             $total_value = $value+$factor_value+$solatium_value+$additional_charge_value;
 
-            if ($rec_id == 0) {
-                $rs_save = DB::select(DB::raw("INSERT into `award_detail` (`scheme_award_info_id`, `khewat_no`, `khata_no`, `khasra_no`, `unit`, `kanal`, `marla`, `sirsai`, `value`, `factor_value`, `solatium_value`, `additional_charge_value`) values ('$scheme_award_info_id', '$khewat_no', '$khata_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value');"));
-                $response=['status'=>1,'msg'=>'Created Successfully'];
-            }else{
-                $rs_save = DB::select(DB::raw("UPDATE `award_detail` set `Khewat_no` = '$Khewat_no', `khata_no` = '$khata_no', `khasra_no` = '$khasra_no', `unit` = $unit, `kanal` = '$kanal', `marla` = '$marla', `sirsai` = '$sirsai', `value` = '$value', `factor_value` = '$factor_value', `solatium_value` = '$solatium_value', `additional_charge_value` = '$additional_charge_value' where `id` = $rec_id limit 1;"));
-                $response=['status'=>1,'msg'=>'Updated Successfully'];
+            if($rec_id > 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $rec_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }    
             }
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);    
+            }
+
+            $rs_save = DB::select(DB::raw("call `up_save_award_land_detail`($user_id, $rec_id, '$scheme_award_info_id', '$khewat_no', '$khata_no', '$mustil_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value', '$from_ip');"));
+            $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
+
+            // if ($rec_id == 0) {
+            //     $rs_save = DB::select(DB::raw("INSERT into `award_detail` (`scheme_award_info_id`, `khewat_no`, `khata_no`, `khasra_no`, `unit`, `kanal`, `marla`, `sirsai`, `value`, `factor_value`, `solatium_value`, `additional_charge_value`) values ('$scheme_award_info_id', '$khewat_no', '$khata_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value');"));
+            //     $response=['status'=>1,'msg'=>'Created Successfully'];
+            // }else{
+            //     $rs_save = DB::select(DB::raw("UPDATE `award_detail` set `Khewat_no` = '$Khewat_no', `khata_no` = '$khata_no', `khasra_no` = '$khasra_no', `unit` = $unit, `kanal` = '$kanal', `marla` = '$marla', `sirsai` = '$sirsai', `value` = '$value', `factor_value` = '$factor_value', `solatium_value` = '$solatium_value', `additional_charge_value` = '$additional_charge_value' where `id` = $rec_id limit 1;"));
+            //     $response=['status'=>1,'msg'=>'Updated Successfully'];
+            // }
             return response()->json($response);
         } catch (Exception $e) {
             $e_method = "awardDetailStore";
