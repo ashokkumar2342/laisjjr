@@ -51,6 +51,7 @@ Route::group(['middleware' => ['preventBackHistory','admin','web']], function() 
 	});
 
 	Route::group(['prefix' => 'common'], function() {
+		Route::get('cmnctl-blank', 'CommonController@blankView')->name('admin.common.blank.view');
 	    Route::get('ShowPdfFile/{path}', 'CommonController@ShowPdfFile')->name('admin.common.showPdfFile');
     	Route::get('pdf-popup/{path}', 'CommonController@pdfPopup')->name('admin.common.pdf.popup');
 		Route::get('pdf-viewer/{path}', 'CommonController@pdfviewer')->name('admin.common.pdf.viewer');
@@ -141,6 +142,7 @@ Route::group(['middleware' => ['preventBackHistory','admin','web']], function() 
 
 	Route::group(['prefix' => 'report'], function() {
 	    Route::get('report-index', 'ReportController@reportIndex')->name('admin.report.index');
+	    Route::get('report-formControls', 'ReportController@formControlShow')->name('admin.report.formControl.show');
     	Route::post('report-result', 'ReportController@reportResult')->name('admin.report.result');
     	Route::get('report-print', 'ReportController@reportPrint')->name('admin.report.print');
 	});

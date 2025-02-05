@@ -10,6 +10,11 @@ use App\Helper\MyFuncs;
 use App\Helper\SelectBox;
 class CommonController extends Controller
 {   
+    public function blankView()
+    {
+        return '';
+    }
+    
     public function ShowPdfFile($pdfFilePath)
     {
         try {

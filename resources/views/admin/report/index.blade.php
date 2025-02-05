@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h3>Award Statement</h3>
+                <h3>Report</h3>
             </div>
         </div> 
     </div>
@@ -13,28 +13,21 @@
             <form  class="add_form" method="post" action="{{ route('admin.report.result') }}" success-content-id="result_div_id" no-reset="true" data-table-new-without-pagination="example1"> 
             {{ csrf_field() }} 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <div class="form-group">
                             <label>Report Type</label>
                             <span class="fa fa-asterisk"></span>
-                            <select name="report_type" class="form-control select2" select2="true"required>
+                            <select name="report_type" id="report_type" class="form-control select2" select2="true" onchange="callAjax(this,'{{ route('admin.report.formControl.show') }}','form_controls');callAjax(this,'{{ route('admin.common.blank.view') }}','result_div_id')" required>
                                 <option value="{{ Crypt::encrypt(0) }}" disabled selected>Select Report</option>
-                               {{--  @foreach ($reportTypes as $reportType)
+                                @foreach ($reportTypes as $reportType)
                                     <option value="{{ Crypt::encrypt($reportType->report_id) }}">{{ $reportType->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>                               
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <input type="submit" class="form-control btn btn-primary" style="margin-top: 30px;" value="Show">
-                        </div>                               
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <a type="button" target="_blank" href="{{ route('admin.report.print') }}" class="form-control btn btn-warning" style="margin-top: 30px;">Print</a>
-                        </div>                               
-                    </div>  
+                    </div> 
+                </div>
+                <div class="row" id="form_controls"> 
+                        
                 </div>
             </form> 
         </div>
@@ -48,5 +41,12 @@
     </div> 
 </section>
 @endsection
+@push('scripts')
+<script>
+    function print_1(val) {
+        $('#print_btn').attr("href",'{{route('admin.report.print','')}}'+'&report_type='+$('#report_type').val()+'&scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val());
+    }
+</script>
+@endpush
 
 
