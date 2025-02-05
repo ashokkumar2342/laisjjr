@@ -1,5 +1,5 @@
 <div class="col-lg-12 text-right">
-    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.award.file.addform', Crypt::encrypt(0)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val())">Add Scheme Award File</button>
+    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.award.file.addform', Crypt::encrypt(0)) }}'+'?scheme_award_info={{Crypt::encrypt($scheme_award_info_id)}}')">Add Scheme Award File</button>
 </div>
 <div class="col-lg-12">
     <fieldset class="fieldset_border">
@@ -7,10 +7,10 @@
             <table class="table table-bordered table-striped table-hover" id="ajax_data_table">
                 <thead style="background-color: #6c757d;color: #fff">
                     <tr>
-                        <th>Sr.No.</th>                
+                        <th>Sr. No.</th>
+                        <th>Action</th>
                         <th>File</th>
                         <th>File Description</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,18 +18,18 @@
                         $sr_no = 1;
                     @endphp
                     @foreach($rs_records as $value)
-                    <tr>
-                        <td>{{ $sr_no++ }}</td>
-                        <td>
-                            @if($value->file_path!="")
-                                <a type="button" onclick="callPopupLarge(this, '{{ route('admin.common.pdf.popup', Crypt::encrypt($value->file_path)) }}')" style="color:blue;">View</a>
-                            @endif
-                        </td>
-                        <td>{{ $value->file_description }}</td>
-                        <td>
-                            <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.award.file.addform', Crypt::encrypt($value->id)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val())"><i class="fa fa-edit"></i> Edit</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>{{ $sr_no++ }}</td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.award.file.addform', Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
+                            </td>
+                            <td>
+                                @if($value->file_path!="")
+                                    <a type="button" onclick="callPopupLarge(this, '{{ route('admin.common.pdf.popup', Crypt::encrypt($value->file_path)) }}')" style="color:blue;">View</a>
+                                @endif
+                            </td>
+                            <td>{{ $value->file_description }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

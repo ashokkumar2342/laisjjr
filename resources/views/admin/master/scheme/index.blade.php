@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h3>Create Scheme</h3>
+                <h3>Create Scheme/Award</h3>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -22,10 +22,10 @@
                             <table class="table table-bordered table-striped table-hover" id="example">
                                 <thead style="background-color: #6c757d;color: #fff">
                                     <tr>
-                                        <th>Sr.No.</th>                
+                                        <th>Sr. No.</th>
+                                        <th>Action</th>      
                                         <th>Scheme Name</th>
                                         <th>Scheme Name Hindi</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -33,14 +33,14 @@
                                         $sr_no = 1;
                                     @endphp
                                     @foreach($rs_records as $value)
-                                    <tr>
-                                        <td>{{ $sr_no++ }}</td>
-                                        <td>{{ $value->scheme_name_e }}</td>
-                                        <td>{{ $value->scheme_name_l }}</td>
-                                        <td>
-                                            <button type="button" class="btn btn-info btn-sm" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.addform',Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ $sr_no++ }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-info btn-sm" onclick="callPopupLarge(this,'{{ route('admin.master.scheme.addform',Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
+                                            </td>
+                                            <td>{{ $value->scheme_name_e }}</td>
+                                            <td>{{ $value->scheme_name_l }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

@@ -427,8 +427,7 @@ class MasterController extends Controller
     { 
         try {
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
-            $rs_district = SelectBox::get_district_access_list_v1(); 
-            return view('admin.master.schemeAwardInfo.index',compact('rs_schemes', 'rs_district'));
+            return view('admin.master.schemeAwardInfo.index',compact('rs_schemes'));
         } catch (\Exception $e) {
             $e_method = "schemeAwardIndex";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -440,8 +439,8 @@ class MasterController extends Controller
     { 
         try {
             $scheme_id = intval(Crypt::decrypt($request->id));
-            $rs_records = DB::select(DB::raw("SELECT `sai`.`id`, `d`.`name_e` as `d_name`, `t`.`name_e` as `t_name`, `v`.`name_e` as `v_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `award_date`, `year` from `scheme_award_info` `sai` inner join `districts` `d` on `d`.`id` = `sai`.`district_id` inner join `tehsils` `t` on `t`.`id` = `sai`.`tehsil_id` inner join `villages` `v` on `v`.`id` = `sai`.`village_id` where `sai`.`scheme_id` =  $scheme_id limit 1;"));  
-            return view('admin.master.schemeAwardInfo.table',compact('rs_records'));
+            $rs_records = DB::select(DB::raw("SELECT `sai`.`id`, `d`.`name_e` as `d_name`, `t`.`name_e` as `t_name`, `v`.`name_e` as `v_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `award_date`, `year` from `scheme_award_info` `sai` inner join `districts` `d` on `d`.`id` = `sai`.`district_id` inner join `tehsils` `t` on `t`.`id` = `sai`.`tehsil_id` inner join `villages` `v` on `v`.`id` = `sai`.`village_id` where `sai`.`scheme_id` =  $scheme_id order by `d`.`name_e`, `t`.`name_e`, `v`.`name_e`;"));  
+            return view('admin.master.schemeAwardInfo.table',compact('rs_records', 'scheme_id'));
         } catch (Exception $e) {
             $e_method = "schemeAwardTable";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -452,25 +451,27 @@ class MasterController extends Controller
     public function schemeAwardAddForm(Request $request, $rec_id)
     { 
         try {
-            if ($request->tehsil == 'null') {
-                $error_message = 'Please Select Tehsil';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
-            if ($request->village == 'null') {
-                $error_message = 'Please Select Village';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
-            if ($request->scheme == 'null') {
-                $error_message = 'Please Select Scheme';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
             $rec_id = intval(Crypt::decrypt($rec_id));
-            $district_id = intval(Crypt::decrypt($request->district));
-            $tehsil_id = intval(Crypt::decrypt($request->tehsil));
-            $village_id = intval(Crypt::decrypt($request->village));
-            $scheme_id = intval(Crypt::decrypt($request->scheme));
-            $rs_records = DB::select(DB::raw("SELECT `award_no`, date_format(`award_date`, '%d-%m-%Y') as `award_date`, `year` from `scheme_award_info` where `id` =  $rec_id limit 1;"));
-            return view('admin.master.schemeAwardInfo.add_form',compact('rs_records', 'rec_id', 'district_id', 'tehsil_id', 'village_id', 'scheme_id'));
+            $rs_district = "";
+            $scheme_id = "";
+            if($rec_id > 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `id`, `scheme_id`, `district_id`, `tehsil_id`, `village_id`, `award_no`, date_format(`award_date`, '%d-%m-%Y') as `awd_date`, `year` from `scheme_award_info` where `id` = $rec_id limit 1;"));
+                if(count($rs_fetch) == 0){
+                    $error_message = 'Something Went Wrong';
+                    return view('admin.common.error_popup', compact('error_message'));
+                }
+                $village_id = $rs_fetch[0]->village_id;
+                $is_permission = MyFuncs::check_village_access($village_id);
+                if($is_permission == 0){
+                    $error_message = 'Something Went Wrong';
+                    return view('admin.common.error_popup', compact('error_message'));    
+                }
+            }else{
+                $rs_district = SelectBox::get_district_access_list_v1();
+                $scheme_id = intval(Crypt::decrypt($request->scheme));
+            }
+            $rs_records = DB::select(DB::raw("SELECT `id`, `scheme_id`, `district_id`, `tehsil_id`, `village_id`, `award_no`, date_format(`award_date`, '%d-%m-%Y') as `awd_date`, `year` from `scheme_award_info` where `id` = $rec_id limit 1;"));
+            return view('admin.master.schemeAwardInfo.add_form',compact('rs_records', 'rec_id', 'rs_district', 'scheme_id'));
         } catch (Exception $e) {
             $e_method = "schemeAwardAddForm";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -481,23 +482,38 @@ class MasterController extends Controller
     {
         try {
             $rec_id = intval(Crypt::decrypt($rec_id));
+            if($rec_id == 0){
+                $rules=[
+                    'district' => 'required',
+                    'tehsil' => 'required',
+                    'village' => 'required',
+                    'scheme_id' => 'required',
+                ];
+                $customMessages = [
+                    'district.required'=> 'Please Select District',
+                    'tehsil.required'=> 'Please Select Tehsil',
+                    'village.required'=> 'Please Select Village',
+                    'scheme_id.required'=> 'Something Went Wrong',
+                ];
+                $validator = Validator::make($request->all(),$rules, $customMessages);
+                if ($validator->fails()) {
+                    $errors = $validator->errors()->all();
+                    $response=array();
+                    $response["status"]=0;
+                    $response["msg"]=$errors[0];
+                    return response()->json($response);// response as json
+                }    
+            }
+            
             $rules=[
-                'district_id' => 'required',             
-                'tehsil_id' => 'required',             
-                'village_id' => 'required',             
-                'scheme_id' => 'required',
                 'award_no' => 'required',
                 'award_date' => 'required',
                 'year' => 'required',
             ];
             $customMessages = [
-                'district_id.required'=> 'Something went wrong',
-                'tehsil_id.required'=> 'Something went wrong',
-                'village_id.required'=> 'Something went wrong',
-                'scheme_id.required'=> 'Something went wrong',
                 'award_no.required'=> 'Please Enter Award No.',
                 'award_date.required'=> 'Please Enter Award Date',
-                'year.required'=> 'Please Enter Year',
+                'year.required'=> 'Please Enter Jamabandi Year',
             ];
             $validator = Validator::make($request->all(),$rules, $customMessages);
             if ($validator->fails()) {
@@ -509,11 +525,32 @@ class MasterController extends Controller
             }
             $user_id = MyFuncs::getUserId();
             $from_ip = MyFuncs::getIp();
-            $district_id = intval(Crypt::decrypt($request->district_id));
-            $state_id = MyFuncs::getStateId_ByDistrict($district_id);
-            $tehsil_id = intval(Crypt::decrypt($request->tehsil_id));
-            $village_id = intval(Crypt::decrypt($request->village_id));
-            $scheme_id = intval(Crypt::decrypt($request->scheme_id));
+            
+            if ($rec_id == 0) {
+                $district_id = intval(Crypt::decrypt($request->district));
+                $state_id = MyFuncs::getStateId_ByDistrict($district_id);
+                $tehsil_id = intval(Crypt::decrypt($request->tehsil));
+                $village_id = intval(Crypt::decrypt($request->village));
+                $scheme_id = intval(Crypt::decrypt($request->scheme_id));
+                if($scheme_id == 0){
+                    $response=['status'=>0,'msg'=>'Please Select Scheme/Award'];
+                    return response()->json($response);
+                }
+            }else{
+                $rs_fetch = DB::select(DB::raw("SELECT `id`, `scheme_id`, `district_id`, `tehsil_id`, `village_id`, `award_no`, date_format(`award_date`, '%d-%m-%Y') as `awd_date`, `year` from `scheme_award_info` where `id` = $rec_id limit 1;"));
+                if(count($rs_fetch) == 0){
+                    $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                    return response()->json($response);
+                }
+                $village_id = $rs_fetch[0]->village_id;
+            }
+
+            $is_permission = MyFuncs::check_village_access($village_id);
+            if($is_permission == 0){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);
+            }
+            
             $award_no = substr(MyFuncs::removeSpacialChr($request->award_no), 0, 10);
             $award_date = substr(MyFuncs::removeSpacialChr($request->award_date), 0, 10);
             $year = substr(MyFuncs::removeSpacialChr($request->year), 0, 10);
@@ -525,6 +562,8 @@ class MasterController extends Controller
                 return $response;
             }
             $award_date = $result_date[2];
+
+
             if ($rec_id == 0) {
                 $rs_save = DB::select(DB::raw("INSERT into `scheme_award_info` (`state_id`, `district_id`, `tehsil_id`, `village_id`, `scheme_id`, `award_no`, `award_date`, `year`) values ($state_id, $district_id, $tehsil_id, $village_id, $scheme_id, '$award_no', '$award_date', '$year');"));
                 $response=['status'=>1,'msg'=>'Created Successfully'];
@@ -555,8 +594,8 @@ class MasterController extends Controller
     { 
         try {
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
-            $rs_records = DB::select(DB::raw("SELECT * from `scheme_award_info_file` where `scheme_award_info_id` =$scheme_award_info_id;"));  
-            return view('admin.master.schemeAwardFileInfo.table',compact('rs_records'));
+            $rs_records = DB::select(DB::raw("SELECT * from `scheme_award_info_file` where `scheme_award_info_id` = $scheme_award_info_id;"));  
+            return view('admin.master.schemeAwardFileInfo.table',compact('rs_records', 'scheme_award_info_id'));
         } catch (\Exception $e) {
             $e_method = "schemeAwardFileTable";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -567,15 +606,17 @@ class MasterController extends Controller
     { 
         try {
             
-            if ($request->scheme_award_info == 'null') {
-                $error_message = 'Please Select Scheme Awerd';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
+            // if ($request->scheme_award_info == 'null') {
+            //     $error_message = 'Please Select Scheme Awerd';
+            //     return view('admin.common.error_popup', compact('error_message'));
+            // }
             $rec_id = intval(Crypt::decrypt($rec_id));
-            $scheme_id = intval(Crypt::decrypt($request->scheme));
-            $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
+            $scheme_award_info_id = 0;
+            if($rec_id == 0 ){
+                $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
+            }
             $rs_records = DB::select(DB::raw("SELECT `file_path`, `file_description` from `scheme_award_info_file` where `id` =  $rec_id limit 1;"));
-            return view('admin.master.schemeAwardFileInfo.add_form',compact('rs_records', 'rec_id', 'scheme_id', 'scheme_award_info_id'));
+            return view('admin.master.schemeAwardFileInfo.add_form',compact('rs_records', 'rec_id', 'scheme_award_info_id'));
         } catch (\Exception $e) {
             $e_method = "schemeAwardFileAddForm";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -586,14 +627,28 @@ class MasterController extends Controller
     {
         try {
             $rec_id = intval(Crypt::decrypt($rec_id));
+            if($rec_id == 0){
+                $rules=[
+                    'scheme_award_info_id' => 'required',
+                ];
+                $customMessages = [
+                    'scheme_award_info_id.required'=> 'Something went wrong',
+                ];
+                $validator = Validator::make($request->all(),$rules, $customMessages);
+                if ($validator->fails()) {
+                    $errors = $validator->errors()->all();
+                    $response=array();
+                    $response["status"]=0;
+                    $response["msg"]=$errors[0];
+                    return response()->json($response);// response as json
+                }    
+            }
             $rules=[
-                'scheme_id' => 'required',
-                'scheme_award_info_id' => 'required',
+                'discription' => 'required',
                 'file' => 'nullable|mimes:pdf|max:100',
             ];
             $customMessages = [
-                'scheme_id.required'=> 'Something went wrong',
-                'scheme_award_info_id.required'=> 'Something went wrong',
+                'discription.required'=> 'Please Enter File Description',
                 'file.mimes'=> 'File/Attachment Accepted Only PDF',
                 'file.max'=> 'File/Attachment Size Cannot Be More Then 100 KB',
             ];
@@ -607,9 +662,25 @@ class MasterController extends Controller
             }
             $user_id = MyFuncs::getUserId();
             $from_ip = MyFuncs::getIp();
-            $scheme_id = intval(Crypt::decrypt($request->scheme_id));
             $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info_id));
             $discription = substr(MyFuncs::removeSpacialChr($request->discription), 0, 250);
+
+            if($rec_id == 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_id` from `scheme_award_info` where `id` = $scheme_award_info_id limit 1;;"));
+                if(count($rs_fetch) == 0){
+                    $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                    return response()->json($response);
+                }
+                $scheme_id = $rs_fetch[0]->scheme_id;    
+            }else{
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_id` from `scheme_award_info_file` where `id` = $rec_id limit 1;;"));
+                if(count($rs_fetch) == 0){
+                    $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                    return response()->json($response);
+                }
+                $scheme_id = $rs_fetch[0]->scheme_id;   
+            }
+            
 
             $rs_fetch = DB::select(DB::raw("SELECT `file_path` from `scheme_award_info_file` where `id` = $rec_id limit 1;"));
             if (count($rs_fetch)>0) {
@@ -643,7 +714,7 @@ class MasterController extends Controller
                 $response=['status'=>1,'msg'=>'Updated Successfully'];
             }
             return response()->json($response);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e_method = "schemeAwardFileStore";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
@@ -665,7 +736,7 @@ class MasterController extends Controller
     { 
         try {
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
-            $rs_records = DB::select(DB::raw("SELECT * from `award_detail` where `scheme_award_info_id` =$scheme_award_info_id;"));  
+            $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`khasra_no`, `ad`.`unit`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
             return view('admin.master.awardDetail.table',compact('rs_records'));
         } catch (\Exception $e) {
             $e_method = "awardDetailTable";
@@ -985,7 +1056,7 @@ class MasterController extends Controller
             $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
             $award_detail_id = intval(Crypt::decrypt($request->award_detail));
             $rs_relation = DB::select(DB::raw("SELECT `id` as `opt_id`, `relation_e` as `opt_text` from `relation`;"));
-            $rs_award_detail_file = DB::select(DB::raw("SELECT `id` as `opt_id`, `file_description` as `opt_text` from `award_detail_file`;"));
+            $rs_award_detail_file = DB::select(DB::raw("SELECT `id` as `opt_id`, `file_description` as `opt_text` from `scheme_award_info_file`;"));
             $rs_records = DB::select(DB::raw("SELECT * from `award_beneficiary_detail` where `id` =  $rec_id limit 1;"));
             return view('admin.master.awardBeneficiary.add_form',compact('rs_relation', 'rs_award_detail_file', 'rs_records', 'rec_id', 'scheme_id', 'scheme_award_info_id', 'award_detail_id'));
         } catch (\Exception $e) {

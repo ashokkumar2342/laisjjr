@@ -100,7 +100,7 @@ class CommonController extends Controller
         try {
             $scheme_id = intval(Crypt::decrypt($request->id));
             
-            $box_caption = "Scheme Award";
+            $box_caption = "Scheme/Award Village";
             $show_disabled = 1;
             $rs_records = SelectBox::get_schemeAwardInfo_access_list_v1($scheme_id);
 

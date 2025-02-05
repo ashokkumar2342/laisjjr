@@ -33,7 +33,7 @@
             <div class="col-lg-4 col-6">
                 <div class="small-box" style="background: #ff9900;">
                     <div class="inner">
-                        <h3>{{$d_count}}</h3>
+                        <h3>{{$t_count}}</h3>
                         <p>Tehsil</p>
                     </div>
                     <div class="icon">
@@ -45,7 +45,7 @@
             <div class="col-lg-4 col-6">
                 <div class="small-box" style="background: #dc3912;color:#fff;">
                     <div class="inner">
-                        <h3>{{$d_count}}</h3>
+                        <h3>{{$v_count}}</h3>
                         <p>Village</p>
                     </div>
                     <div class="icon">

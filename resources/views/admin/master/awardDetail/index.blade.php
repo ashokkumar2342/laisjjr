@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h3>Award Details</h3>
+                <h3>Award Land Details</h3>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -17,20 +17,20 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-6 form-group">
-                    <label for="exampleInputEmail1">Scheme</label>
+                    <label for="exampleInputEmail1">Scheme/Award</label>
                     <span class="fa fa-asterisk"></span>
                     <select name="scheme" class="form-control select2" id="scheme_select_box" onchange="callAjax(this,'{{ route('admin.common.scheme.wise.schemeAwardInfo') }}','scheme_award_select_box')" required>
-                        <option selected disabled>Select Scheme</option>
+                        <option selected disabled>Select Scheme/Award</option>
                         @foreach ($rs_schemes as $val_rec)
                             <option value="{{ Crypt::encrypt($val_rec->opt_id) }}">{{ $val_rec->opt_text }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-lg-6 form-group">
-                    <label for="exampleInputEmail1">Scheme Award</label>
+                    <label for="exampleInputEmail1">Scheme/Award Village</label>
                     <span class="fa fa-asterisk"></span>
                     <select name="scheme_award_info" class="form-control select2" id="scheme_award_select_box" data-table-new-without-pagination="ajax_data_table" onchange="callAjax(this,'{{ route('admin.master.award.detail.table') }}','result_table')" required>
-                        <option selected disabled>Select Scheme Award</option> 
+                        <option selected disabled>Select Scheme/Award Village</option> 
                     </select>
                 </div>
             </div>             

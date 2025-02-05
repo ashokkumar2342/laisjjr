@@ -39,7 +39,7 @@ class SelectBox {
     return $result_rs;
   }
 
-  public static function get_block_access_list_v1($d_id)  //1- Block, 2 - MC, 0-Both
+  public static function get_block_access_list_v1($d_id)  
   { 
     $user_id = MyFuncs::getUserId();
     $role_id = MyFuncs::getUserRoleId();
@@ -77,7 +77,21 @@ class SelectBox {
 
   public static function get_schemeAwardInfo_access_list_v1($scheme_id) 
   { 
-    $result_rs = DB::select(DB::raw("SELECT `id` as `opt_id`, concat(`award_no`, ' (', date_format(`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` where `scheme_id` = $scheme_id order by `award_no`;"));
+    $user_id = MyFuncs::getUserId();
+    $role_id = MyFuncs::getUserRoleId();
+    
+    if($role_id == 1){
+      $result_rs = DB::select(DB::raw("SELECT `sai`.`id` as `opt_id`, concat(`vil`.`code`, ' - ', `vil`.`name_e`, ' - ', `sai`.`award_no`, ' (', date_format(`sai`.`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` `sai` inner join `villages` `vil` on `vil`.`id` = `sai`.`village_id` where `sai`.`scheme_id` = $scheme_id order by `vil`.`code`;"));
+    }elseif($role_id == 2){
+      $result_rs = DB::select(DB::raw("SELECT `sai`.`id` as `opt_id`, concat(`vil`.`code`, ' - ', `vil`.`name_e`, ' - ', `sai`.`award_no`, ' (', date_format(`sai`.`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` `sai` inner join `villages` `vil` on `vil`.`id` = `sai`.`village_id` where `sai`.`scheme_id` = $scheme_id and `vil`.`districts_id` in (select `district_id` from `user_district_assigns` where `user_id` = $user_id and `status` = 1) order by `vil`.`code`;"));
+    }elseif($role_id == 3){
+      $result_rs = DB::select(DB::raw("SELECT `sai`.`id` as `opt_id`, concat(`vil`.`code`, ' - ', `vil`.`name_e`, ' - ', `sai`.`award_no`, ' (', date_format(`sai`.`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` `sai` inner join `villages` `vil` on `vil`.`id` = `sai`.`village_id` where `sai`.`scheme_id` = $scheme_id and `vil`.`tehsil_id` in (select `tehsils_id` from `user_tehsil_assigns` where `user_id` = $user_id and `status` = 1) order by `vil`.`code`;"));
+    }elseif($role_id == 4){
+      $result_rs = DB::select(DB::raw("SELECT `sai`.`id` as `opt_id`, concat(`vil`.`code`, ' - ', `vil`.`name_e`, ' - ', `sai`.`award_no`, ' (', date_format(`sai`.`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` `sai` inner join `villages` `vil` on `vil`.`id` = `sai`.`village_id` where `sai`.`scheme_id` = $scheme_id and `vil`.`id` in (select `village_id` from `user_village_assigns` where `user_id` = $user_id and `status` = 1) order by `vil`.`code`;"));
+    }else{
+      $result_rs = DB::select(DB::raw("SELECT 0 as `opt_id`, '' as `opt_text`;"));
+    }
+    
     return $result_rs;
   }
 
