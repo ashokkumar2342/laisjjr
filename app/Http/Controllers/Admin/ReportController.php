@@ -84,7 +84,7 @@ class ReportController extends Controller
                     $response["msg"]='Something went wrong';
                     return response()->json($response);
                 }
-                $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id order by `ad`.`id`;"));
+                $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
 
                 $tcols = 11;
                 $qcols = array(

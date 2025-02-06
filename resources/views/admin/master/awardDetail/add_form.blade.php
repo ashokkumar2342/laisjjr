@@ -76,7 +76,7 @@
                             <input type="text" name="additional_charge_value" class="form-control sum-input" maxlength="12" required value="{{@$rs_records[0]->additional_charge_value}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 46)"> 
                         </div>
                         <div class="col-lg-12 form-group">
-                            <p><strong>Total: <span id="total"></span></strong></p>
+                            <p><strong>Total: <span id="total">{{@$rs_records[0]->t_value_sep}}</span></strong></p>
                         </div>
                     </div>            
                 </div>

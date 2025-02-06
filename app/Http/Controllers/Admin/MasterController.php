@@ -839,13 +839,6 @@ class MasterController extends Controller
             $rs_save = DB::select(DB::raw("call `up_save_award_land_detail`($user_id, $rec_id, '$scheme_award_info_id', '$khewat_no', '$khata_no', '$mustil_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value', '$from_ip');"));
             $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
 
-            // if ($rec_id == 0) {
-            //     $rs_save = DB::select(DB::raw("INSERT into `award_detail` (`scheme_award_info_id`, `khewat_no`, `khata_no`, `khasra_no`, `unit`, `kanal`, `marla`, `sirsai`, `value`, `factor_value`, `solatium_value`, `additional_charge_value`) values ('$scheme_award_info_id', '$khewat_no', '$khata_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value');"));
-            //     $response=['status'=>1,'msg'=>'Created Successfully'];
-            // }else{
-            //     $rs_save = DB::select(DB::raw("UPDATE `award_detail` set `Khewat_no` = '$Khewat_no', `khata_no` = '$khata_no', `khasra_no` = '$khasra_no', `unit` = $unit, `kanal` = '$kanal', `marla` = '$marla', `sirsai` = '$sirsai', `value` = '$value', `factor_value` = '$factor_value', `solatium_value` = '$solatium_value', `additional_charge_value` = '$additional_charge_value' where `id` = $rec_id limit 1;"));
-            //     $response=['status'=>1,'msg'=>'Updated Successfully'];
-            // }
             return response()->json($response);
         } catch (Exception $e) {
             $e_method = "awardDetailStore";
@@ -857,8 +850,25 @@ class MasterController extends Controller
     {
         try {
             $rec_id = intval(Crypt::decrypt($rec_id));
-            $rs_save = DB::select(DB::raw("UPDATE `award_detail` set `status` = 3 where `id` = $rec_id limit 1;"));
-            $response=['status'=>1,'msg'=>'Deleted Successfully'];
+
+            if($rec_id > 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $rec_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }
+            }
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);
+            }
+
+            $user_id = MyFuncs::getUserId();
+            $from_ip = MyFuncs::getIp();
+
+            $rs_save = DB::select(DB::raw("call `up_delete_award_land_detail`($user_id, $rec_id, '$from_ip');"));
+            $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
             return response()->json($response);   
         } catch (\Exception $e) {
             $e_method = "awardDetailDelete";
@@ -875,7 +885,6 @@ class MasterController extends Controller
             $e_method = "awardDetailFileIndex";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
-
     }
 
     public function awardDetailFileTable(Request $request)
