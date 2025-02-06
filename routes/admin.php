@@ -128,10 +128,11 @@ Route::group(['middleware' => ['preventBackHistory','admin','web']], function() 
 	    Route::post('relation-store/{rec_id}', 'MasterController@relationStore')->name('admin.master.relation.store');
 
 	    //Award Beneficiary Detail
-	    Route::get('award-beneficiary-index', 'MasterController@awardBeneficiaryIndex')->name('admin.master.award.beneficiary.index');
-	    Route::get('award-beneficiary-table', 'MasterController@awardBeneficiaryTable')->name('admin.master.award.beneficiary.table');
-	    Route::get('award-beneficiary.addform/{rec_id}', 'MasterController@awardBeneficiaryAddForm')->name('admin.master.award.beneficiary.addform');
-	    Route::post('award-beneficiary-store/{rec_id}', 'MasterController@awardBeneficiaryStore')->name('admin.master.award.beneficiary.store');
+	    Route::get('award-beneficiary-index', 'AwardBeneficiaryController@awardBeneficiaryIndex')->name('admin.master.award.beneficiary.index');
+	    Route::get('award-beneficiary-table', 'AwardBeneficiaryController@awardBeneficiaryTable')->name('admin.master.award.beneficiary.table');
+	    Route::get('award-beneficiary.addform/{rec_id}', 'AwardBeneficiaryController@awardBeneficiaryAddForm')->name('admin.master.award.beneficiary.addform');
+	    Route::post('award-beneficiary-store/{rec_id}', 'AwardBeneficiaryController@awardBeneficiaryStore')->name('admin.master.award.beneficiary.store');
+	    Route::get('award-beneficiary-delete/{rec_id}', 'AwardBeneficiaryController@awardBeneficiaryDelete')->name('admin.master.award.beneficiary.delete');
 
 	    //Award Beneficiary Payment Detail
 	    Route::get('award-beneficiary-payment-index', 'MasterController@awardBeneficiaryPaymentIndex')->name('admin.master.award.beneficiary.payment.index');

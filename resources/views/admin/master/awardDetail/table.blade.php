@@ -1,3 +1,6 @@
+<div class="col-lg-12 text-left">
+    <strong>{{@$result_rs[0]->opt_text}}</strong>
+</div>
 <div class="col-lg-12 text-right">
     @if ($scheme_award_info_id > 0)
         <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt(0)) }}'+'?scheme_award_info={{Crypt::encrypt($scheme_award_info_id)}}')">Add Award Land Detail</button>

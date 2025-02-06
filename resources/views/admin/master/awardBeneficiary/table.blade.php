@@ -1,5 +1,8 @@
+<div class="col-lg-12 text-left">
+    <strong>{{@$result_rs[0]->opt_text}}</strong>
+</div>
 <div class="col-lg-12 text-right">
-    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val()+'&award_detail='+$('#award_detail_select_box').val())">Add Award Beneficiary Detail</button>
+    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?award_detail={{Crypt::encrypt($award_detail_id)}}')">Add Award Beneficiary Detail</button>
 </div>
 <div class="col-lg-12">
     <fieldset class="fieldset_border">
@@ -17,8 +20,7 @@
                         <th>Relation 2</th>
                         <th>Name 3</th>
                         <th>Name 3 Hindi</th>
-                        <th>Hissa/Numerator</th>
-                        <th>Hissa/Denominator</th>
+                        <th>Hissa</th>
                         <th>Value</th>
                         <th>Award Detail File</th>
                         <th>Page No.</th>
@@ -30,8 +32,12 @@
                     @endphp
                     @foreach($rs_records as $value)
                     <tr>
-                        <td>
-                            <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt($value->id)) }}'+'?scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val()+'&award_detail='+$('#award_detail_select_box').val())"><i class="fa fa-edit"></i> Edit</button>
+                        <td class="text-nowrap">
+                            @if ($value->status < 2)
+                                <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
+
+                                <button type="button" class="btn btn-sm btn-danger" select-triger="award_detail_select_box" success-popup="true" onclick="if (confirm('Are you sure you want to delete this record?')){callAjax(this,'{{ route('admin.master.award.beneficiary.delete', Crypt::encrypt($value->id)) }}') } else{console_Log('cancel') }">Delete</button>
+                            @endif
                         </td>
                         <td>{{ $sr_no++ }}</td>
                         <td>{{$value->name_1_e}}</td>
@@ -43,7 +49,6 @@
                         <td>{{$value->name_3_e}}</td>
                         <td>{{$value->name_3_l}}</td>
                         <td>{{$value->hissa_numerator}}</td>
-                        <td>{{$value->hissa_denominator}}</td>
                         <td>{{$value->value}}</td>
                         <td>{{$value->award_detail_file_id}}</td>
                         <td>{{$value->page_no}}</td>

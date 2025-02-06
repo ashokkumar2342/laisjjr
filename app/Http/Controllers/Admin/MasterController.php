@@ -741,7 +741,8 @@ class MasterController extends Controller
                 $scheme_award_info_id = 0;
             }
             $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
-            return view('admin.master.awardDetail.table',compact('rs_records', 'scheme_award_info_id'));
+            $result_rs = DB::select(DB::raw("SELECT concat(`vil`.`code`, ' - ', `vil`.`name_e`, ' - ', `sai`.`award_no`, ' (', date_format(`sai`.`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` `sai` inner join `villages` `vil` on `vil`.`id` = `sai`.`village_id` where `sai`.`id` = $scheme_award_info_id limit 1;"));
+            return view('admin.master.awardDetail.table',compact('rs_records', 'scheme_award_info_id', 'result_rs'));
         } catch (Exception $e) {
             $e_method = "awardDetailTable";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -1066,113 +1067,6 @@ class MasterController extends Controller
             return response()->json($response);
         } catch (Exception $e) {
             $e_method = "relationStore";
-            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
-        }
-    }
-
-    public function awardBeneficiaryIndex()
-    { 
-        try {
-            $rs_schemes = SelectBox::get_schemes_access_list_v1();
-            return view('admin.master.awardBeneficiary.index',compact('rs_schemes'));
-        } catch (\Exception $e) {
-            $e_method = "awardBeneficiaryIndex";
-            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
-        }
-
-    }
-
-    public function awardBeneficiaryTable(Request $request)
-    { 
-        try {
-            $award_detail_id = intval(Crypt::decrypt($request->id));
-            $rs_records = DB::select(DB::raw("SELECT * from `award_beneficiary_detail` where `award_detail_id` =$award_detail_id;"));  
-            return view('admin.master.awardBeneficiary.table',compact('rs_records'));
-        } catch (Exception $e) {
-            $e_method = "awardBeneficiaryTable";
-            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
-        }
-    }
-
-    public function awardBeneficiaryAddForm(Request $request, $rec_id)
-    { 
-        try {
-            
-            if ($request->scheme_award_info == 'null') {
-                $error_message = 'Please Select Scheme Awerd';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
-            if ($request->award_detail == 'null') {
-                $error_message = 'Please Select Awerd Detail';
-                return view('admin.common.error_popup', compact('error_message'));
-            }
-            $rec_id = intval(Crypt::decrypt($rec_id));
-            $scheme_id = intval(Crypt::decrypt($request->scheme));
-            $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
-            $award_detail_id = intval(Crypt::decrypt($request->award_detail));
-            $rs_relation = DB::select(DB::raw("SELECT `id` as `opt_id`, `relation_e` as `opt_text` from `relation`;"));
-            $rs_award_detail_file = DB::select(DB::raw("SELECT `id` as `opt_id`, `file_description` as `opt_text` from `scheme_award_info_file`;"));
-            $rs_records = DB::select(DB::raw("SELECT * from `award_beneficiary_detail` where `id` =  $rec_id limit 1;"));
-            return view('admin.master.awardBeneficiary.add_form',compact('rs_relation', 'rs_award_detail_file', 'rs_records', 'rec_id', 'scheme_id', 'scheme_award_info_id', 'award_detail_id'));
-        } catch (\Exception $e) {
-            $e_method = "awardBeneficiaryAddForm";
-            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
-        }
-    }
-
-    public function awardBeneficiaryStore(Request $request, $rec_id)
-    {
-        try {
-            $rec_id = intval(Crypt::decrypt($rec_id));
-            $rules=[
-                'scheme_award_info_id' => 'required',
-                'award_detail_id' => 'required',                
-            ];
-            $customMessages = [
-                'scheme_award_info_id.required'=> 'Something went wrong',
-                'award_detail_id.required'=> 'Something went wrong',
-            ];
-            $validator = Validator::make($request->all(),$rules, $customMessages);
-            if ($validator->fails()) {
-                $errors = $validator->errors()->all();
-                $response=array();
-                $response["status"]=0;
-                $response["msg"]=$errors[0];
-                return response()->json($response);// response as json
-            }
-            $user_id = MyFuncs::getUserId();
-            $from_ip = MyFuncs::getIp();
-            $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info_id));
-            $award_detail_id = intval(Crypt::decrypt($request->award_detail_id));
-
-            $name_1_e = substr(MyFuncs::removeSpacialChr($request->name_1_e), 0, 50);
-            $name_1_l = MyFuncs::removeSpacialChr($request->name_1_l);
-            $relation_1_id = intval(Crypt::decrypt($request->relation_1_id));
-
-            $name_2_e = substr(MyFuncs::removeSpacialChr($request->name_2_e), 0, 50);
-            $name_2_l = MyFuncs::removeSpacialChr($request->name_2_l);
-            $relation_2_id = intval(Crypt::decrypt($request->relation_2_id));
-
-            $name_3_e = substr(MyFuncs::removeSpacialChr($request->name_3_e), 0, 50);
-            $name_3_l = MyFuncs::removeSpacialChr($request->name_3_l);
-            
-            $hissa_numerator = intval(MyFuncs::removeSpacialChr($request->hissa_numerator));
-            $hissa_denominator = intval(MyFuncs::removeSpacialChr($request->hissa_denominator));
-            $value = floatval(MyFuncs::removeSpacialChr($request->value));
-
-            $award_detail_file_id = intval(Crypt::decrypt($request->award_detail_file_id));
-            $page_no = intval($request->page_no);
-
-            if ($rec_id == 0) {
-                $rs_save = DB::select(DB::raw("INSERT into `award_beneficiary_detail` (`scheme_award_info_id`, `award_detail_id`, `name_1_e`, `name_1_l`, `relation_1_id`, `name_2_e`, `name_2_l`, `relation_2_id`, `name_3_e`, `name_3_l`, `hissa_numerator`, `hissa_denominator`, `value`, `award_detail_file_id`, `page_no`) values ($scheme_award_info_id, $award_detail_id, '$name_1_e', '$name_1_l', '$relation_1_id', '$name_2_e', '$name_2_l', '$relation_2_id', '$name_3_e', '$name_3_l', '$hissa_numerator', '$hissa_denominator', '$value', '$award_detail_file_id', '$page_no');"));
-                $response=['status'=>1,'msg'=>'Created Successfully'];
-            }else{
-                $rs_save = DB::select(DB::raw("UPDATE `award_beneficiary_detail` set `name_1_e` = '$name_1_e', `name_1_l` = '$name_1_l', `relation_1_id` = $relation_1_id, `name_2_e` = '$name_2_e', `name_2_l` = '$name_2_l', `relation_2_id` = $relation_2_id, `name_3_e` = '$name_3_e', `name_3_l` = '$name_3_l', `hissa_numerator` = '$hissa_numerator', `hissa_denominator` = '$hissa_denominator', `value` = '$value', `award_detail_file_id` = $award_detail_file_id, `page_no` = $page_no where `id` = $rec_id limit 1;"));
-                $response=['status'=>1,'msg'=>'Updated Successfully'];
-            }
-            return response()->json($response);
-        } catch (Exception $e) {
-            $e_method = "awardBeneficiaryStore";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
     }

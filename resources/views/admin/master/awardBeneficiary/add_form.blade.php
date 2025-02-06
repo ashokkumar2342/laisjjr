@@ -10,64 +10,63 @@
             <form action="{{ route('admin.master.award.beneficiary.store', Crypt::encrypt($rec_id)) }}" method="post" class="add_form" button-click="btn_close" select-triger="award_detail_select_box">
                 {{ csrf_field() }}
                 <div class="box-body">
-                    <input type="hidden" name="scheme_id" value="{{Crypt::encrypt($scheme_id)}}">
-                    <input type="hidden" name="scheme_award_info_id" value="{{Crypt::encrypt($scheme_award_info_id)}}">
                     <input type="hidden" name="award_detail_id" value="{{Crypt::encrypt($award_detail_id)}}">
-                    
                     <div class="row">
                         <div class="col-lg-6 form-group">
                             <label>Name 1</label>
-                            <input type="text" name="name_1_e" id="name_1_e" class="form-control" maxlength="50" value="{{@$rs_records[0]->name_1_e}}" onblur="getTranslatedata()"> 
+                            <input type="text" name="name_1_e" id="name_1_e" class="form-control" maxlength="50" value="{{@$rs_records[0]->name_1_e}}" onblur="getTranslatedata()" placeholder="Enter Name"> 
                         </div>
                         <div class="col-lg-6 form-group">
                             <label>Name 1 Hindi</label>
-                            <input type="text" name="name_1_l" id="name_1_l" class="form-control" maxlength="100" value="{{@$rs_records[0]->name_1_l}}"> 
+                            <input type="text" name="name_1_l" id="name_1_l" class="form-control" maxlength="100" value="{{@$rs_records[0]->name_1_l}}" placeholder="Enter Name"> 
                         </div>
-                        <div class="col-lg-6 form-group">
+                        <div class="col-lg-4 form-group">
                             <label>Relation 1</label>
                             <select name="relation_1_id" class="form-control select2">
-                                <option selected value="{{ Crypt::encrypt(1) }}">Select Relation</option>
+                                <option selected value="{{ Crypt::encrypt(0) }}">Select Relation</option>
                                 @foreach ($rs_relation as $val_rec)
                                     <option value="{{ Crypt::encrypt($val_rec->opt_id) }}"{{$val_rec->opt_id==@$rs_records[0]->relation_1_id?'selected':''}}>{{ $val_rec->opt_text }}</option>
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group">
+                        <div class="col-lg-4 form-group">
                             <label>Name 2</label>
-                            <input type="text" name="name_2_e" id="name_2_e" class="form-control" maxlength="50" value="{{@$rs_records[0]->name_2_e}}" onblur="getTranslatedata2()"> 
+                            <input type="text" name="name_2_e" id="name_2_e" class="form-control" maxlength="50" value="{{@$rs_records[0]->name_2_e}}" onblur="getTranslatedata2()" placeholder="Enter Name"> 
                         </div>
-                        <div class="col-lg-6 form-group">
+                        <div class="col-lg-4 form-group">
                             <label>Name 2 Hindi</label>
-                            <input type="text" name="name_2_l" id="name_2_l" class="form-control" maxlength="100" value="{{@$rs_records[0]->name_2_l}}"> 
+                            <input type="text" name="name_2_l" id="name_2_l" class="form-control" maxlength="100" value="{{@$rs_records[0]->name_2_l}}" placeholder="Enter Name"> 
                         </div>
-                        <div class="col-lg-6 form-group">
+                        <div class="col-lg-4 form-group">
                             <label>Relation 2</label>
                             <select name="relation_2_id" class="form-control select2">
-                                <option selected value="{{ Crypt::encrypt(1) }}">Select Relation</option>
+                                <option selected value="{{ Crypt::encrypt(0) }}">Select Relation</option>
                                 @foreach ($rs_relation as $val_rec)
                                     <option value="{{ Crypt::encrypt($val_rec->opt_id) }}"{{$val_rec->opt_id==@$rs_records[0]->relation_2_id?'selected':''}}>{{ $val_rec->opt_text }}</option>
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 form-group">
+                        <div class="col-lg-4 form-group">
                             <label>Name 3</label>
                             <input type="text" name="name_3_e" id="name_3_e" class="form-control" maxlength="50" value="{{@$rs_records[0]->name_3_e}}" onblur="getTranslatedata3()"> 
                         </div>
-                        <div class="col-lg-6 form-group">
+                        <div class="col-lg-4 form-group">
                             <label>Name 3 Hindi</label>
                             <input type="text" name="name_3_l" id="name_3_l" class="form-control" maxlength="100" value="{{@$rs_records[0]->name_3_l}}"> 
                         </div>
-                        <div class="col-lg-6 form-group">
-                            <label>Hissa/Numerator</label>
-                            <input type="text" name="hissa_numerator" class="form-control" maxlength="10" value="{{@$rs_records[0]->hissa_numerator}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"> 
-                        </div>
-                        <div class="col-lg-6 form-group">
-                            <label>Hissa/Denominator</label>
-                            <input type="text" name="hissa_denominator" class="form-control" maxlength="10" value="{{@$rs_records[0]->hissa_denominator}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"> 
+                        <div class="col-lg-4 form-group">
+                            <label>Hissa</label>
+                            <div class="row">
+                                <div class="col-lg-5">
+                                    <input type="text" name="hissa_numerator" class="form-control" maxlength="10" value="{{@$rs_records[0]->hissa_numerator}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                                </div>
+                                <div class="col-lg-1">
+                                    /
+                                </div>
+                                <div class="col-lg-5 pull-left">
+                                    <input type="text" name="hissa_denominator" class="form-control" maxlength="10" value="{{@$rs_records[0]->hissa_denominator}}" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-4 form-group">
                             <label>Value</label>
@@ -76,7 +75,7 @@
                         <div class="col-lg-4 form-group">
                             <label>Award Detail File</label>
                             <select name="award_detail_file_id" class="form-control select2">
-                                <option selected {{ Crypt::encrypt(0) }}>Select Award Detail File</option>
+                                <option selected value="{{ Crypt::encrypt(0) }}">Select Award Detail File</option>
                                 @foreach ($rs_award_detail_file as $val_rec)
                                     <option value="{{ Crypt::encrypt($val_rec->opt_id) }}"{{$val_rec->opt_id==@$rs_records[0]->award_detail_file_id?'selected':''}}>{{ $val_rec->opt_text }}</option>
                                 @endforeach
