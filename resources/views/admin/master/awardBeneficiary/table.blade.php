@@ -11,15 +11,9 @@
                 <thead style="background-color: #6c757d;color: #fff">
                     <tr>
                         <th>Action</th>
-                        <th>Sr.No.</th>                
-                        <th>Name 1</th>
-                        <th>Name 1 Hindi</th>
-                        <th>Relation 1</th>
-                        <th>Name 2</th>
-                        <th>Name 2 Hindi</th>
-                        <th>Relation 2</th>
-                        <th>Name 3</th>
-                        <th>Name 3 Hindi</th>
+                        <th>Sr. No.</th>                
+                        <th>Name (E)</th>
+                        <th>Name (H)</th>
                         <th>Hissa</th>
                         <th>Value</th>
                         <th>Award Detail File</th>
@@ -40,16 +34,10 @@
                             @endif
                         </td>
                         <td>{{ $sr_no++ }}</td>
-                        <td>{{$value->name_1_e}}</td>
-                        <td>{{$value->name_1_l}}</td>
-                        <td>{{$value->relation_1_id}}</td>
-                        <td>{{$value->name_2_e}}</td>
-                        <td>{{$value->name_2_l}}</td>
-                        <td>{{$value->relation_2_id}}</td>
-                        <td>{{$value->name_3_e}}</td>
-                        <td>{{$value->name_3_l}}</td>
-                        <td>{{$value->hissa_numerator}}</td>
-                        <td>{{$value->value}}</td>
+                        <td>{{$value->name_complete_e}}</td>
+                        <td>{{$value->name_complete_l}}</td>
+                        <td>{{$value->hissa_numerator}}/{{$value->hissa_denominator}}</td>
+                        <td>{{$value->value_txt}}</td>
                         <td>{{$value->award_detail_file_id}}</td>
                         <td>{{$value->page_no}}</td>
                         

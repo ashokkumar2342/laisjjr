@@ -44,18 +44,22 @@ class AwardBeneficiaryController extends Controller
     { 
         try {
             $rec_id = intval(Crypt::decrypt($rec_id));
-            $award_detail_id = intval(Crypt::decrypt($request->award_detail));
+            
             if($rec_id > 0){
-                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_beneficiary_detail` where `id` =  $rec_id limit 1;"));
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id`, `award_detail_id` from `award_beneficiary_detail` where `id` =  $rec_id limit 1;"));
                 $scheme_award_info_id = 0;
+                $award_detail_id = 0;
                 if(count($rs_fetch) > 0){
                     $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                    $award_detail_id = $rs_fetch[0]->award_detail_id;
                 }    
                 $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
                 if($is_permission == 0){
                     $error_message = 'Something Went Wrong';
                     return view('admin.common.error_popup', compact('error_message'));    
                 }
+            }else{
+                $award_detail_id = intval(Crypt::decrypt($request->award_detail));
             }
             $rs_relation = DB::select(DB::raw("SELECT `id` as `opt_id`, `relation_e` as `opt_text` from `relation`;"));
             $rs_award_detail_file = DB::select(DB::raw("SELECT `id` as `opt_id`, `file_description` as `opt_text` from `scheme_award_info_file`;"));
@@ -118,9 +122,20 @@ class AwardBeneficiaryController extends Controller
                     $response=['status'=>0,'msg'=>'Something Went Wrong'];
                     return response()->json($response);    
                 }
+            }else{
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` = $award_detail_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }    
+                $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+                if($is_permission == 0){
+                    $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                    return response()->json($response);    
+                }
             }
 
-            $rs_save = DB::select(DB::raw("call ``($user_id, ,'$from_ip');"));
+            $rs_save = DB::select(DB::raw("call `up_save_award_beneficiary_detail`($user_id, $rec_id, $scheme_award_info_id, $award_detail_id, '$name_1_e', '$name_1_l', $relation_1_id, '$name_2_e', '$name_2_l', $relation_2_id, '$name_3_e', '$name_3_l', $hissa_numerator, $hissa_denominator, $value, $award_detail_file_id, $page_no,'$from_ip');"));
             $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
             return response()->json($response);
         } catch (Exception $e) {

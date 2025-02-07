@@ -97,7 +97,7 @@ class SelectBox {
 
   public static function get_awardDetail_access_list_v1($scheme_award_info_id) 
   { 
-    $result_rs = DB::select(DB::raw("SELECT `id` as `opt_id`, concat(`khewat_no`, ' - ', `khata_no`, ' - ', `khasra_no`) as `opt_text` from `award_detail` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 3 order by `khewat_no`, `khata_no`, `khasra_no`;"));
+    $result_rs = DB::select(DB::raw("SELECT `id` as `opt_id`, concat(`khewat_no`, ' - ', `khata_no`, ' - ', `mustil_no`, '//', `khasra_no`) as `opt_text` from `award_detail` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 3 order by `khewat_no`, `khata_no`, `khasra_no`;"));
     return $result_rs;
   }
 
