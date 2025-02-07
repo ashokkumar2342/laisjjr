@@ -16,7 +16,7 @@
     <div class="card card-info">
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-3 form-group">
+                <div class="col-lg-12 form-group">
                     <label for="exampleInputEmail1">Scheme</label>
                     <span class="fa fa-asterisk"></span>
                     <select name="scheme" class="form-control select2" id="scheme_select_box"  data-table-new-without-pagination="ajax_data_table" onchange="callAjax(this,'{{ route('admin.master.scheme.award.table') }}','result_table')">

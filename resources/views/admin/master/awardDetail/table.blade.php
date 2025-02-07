@@ -1,10 +1,22 @@
-<div class="col-lg-12 text-left">
-    <strong>{{@$result_rs[0]->opt_text}}</strong>
-</div>
-<div class="col-lg-12 text-right">
-    @if ($scheme_award_info_id > 0)
-        <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt(0)) }}'+'?scheme_award_info={{Crypt::encrypt($scheme_award_info_id)}}')">Add Award Land Detail</button>
-    @endif
+<div class="col-lg-12">                
+    <div class="card card-info" style="background: #6c757d;color: #fff;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="btn-group table-responsive">
+                        Scheme:: <b>{{@$result_rs[0]->scheme_name_e}}</b>, Scheme/Award Village:: <b>{{@$result_rs[0]->tehsil_name}}, {{@$result_rs[0]->vil_name}}, {{@$result_rs[0]->award_no}},  {{@$result_rs[0]->date_of_award}}, {{@$result_rs[0]->year}}</b>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="btn-group table-responsive">
+                        @if ($scheme_award_info_id > 0)
+                            <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt(0)) }}'+'?scheme_award_info={{Crypt::encrypt($scheme_award_info_id)}}')">Add Award Land Detail</button>
+                        @endif
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>                
 </div>
 <div class="col-lg-12">
     <fieldset class="fieldset_border">

@@ -1,8 +1,33 @@
-<div class="col-lg-12 text-left">
-    <strong>{{@$result_rs[0]->opt_text}}</strong>
+<div class="col-lg-12">                
+    <div class="card card-info">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="btn-group table-responsive">
+                        <b>Scheme:: <span style="color:green;">{{@$result_rs[0]->scheme_name_e}}</span></b>, &nbsp;<b>Scheme/Award:: <span style="color:green;">{{@$result_rs[0]->tehsil_name}} - {{@$result_rs[0]->vil_name}} - {{@$result_rs[0]->award_no}} - {{@$result_rs[0]->date_of_award}} - {{@$result_rs[0]->year}}</span></b>, &nbsp;<b>Award Detail:: <span style="color:green;">{{@$result_rs[0]->khasra_no}}, {{@$result_rs[0]->khata_no}}, {{@$result_rs[0]->mustil_no}}//{{@$result_rs[0]->khasra_no}}</span></b>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>                
 </div>
-<div class="col-lg-12 text-right">
-    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?award_detail={{Crypt::encrypt($award_detail_id)}}')">Add Award Beneficiary Detail</button>
+<div class="col-lg-12">                
+    <div class="card card-info">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="btn-group table-responsive">
+                        <b>Total Value:: <span style="color:green;">{{@$result_rs[0]->total_value}}</span></b>, &nbsp;<b>Hissa Added:: <span style="color:green;">{{@$val_result_rs[0]->hissa_added}}</span></b>, &nbsp;<b>Total Value Added:: <span style="color:green;">{{@$val_result_rs[0]->total_value_added}}</span></b>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="btn-group table-responsive">
+                        <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?award_detail={{Crypt::encrypt($award_detail_id)}}')">Add Award Beneficiary Detail</button>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </div>                
 </div>
 <div class="col-lg-12">
     <fieldset class="fieldset_border">
@@ -38,7 +63,7 @@
                         <td>{{$value->name_complete_l}}</td>
                         <td>{{$value->hissa_numerator}}/{{$value->hissa_denominator}}</td>
                         <td>{{$value->value_txt}}</td>
-                        <td>{{$value->award_detail_file_id}}</td>
+                        <td>{{$value->file_description}}</td>
                         <td>{{$value->page_no}}</td>
                         
                     </tr>

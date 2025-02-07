@@ -42,8 +42,11 @@ class ReportController extends Controller
             if($report_id == 1){
                 $rs_schemes = SelectBox::get_schemes_access_list_v1();
                 return view('admin.report.AwardLandDetails.form_1', compact('rs_schemes'));
+            }elseif($report_id == 2){
+                $rs_schemes = SelectBox::get_schemes_access_list_v1();
+                return view('admin.report.AwardBeneficiaryDetail.form_2', compact('rs_schemes'));
             }        
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e_method = "formControlShow";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
@@ -84,7 +87,7 @@ class ReportController extends Controller
                     $response["msg"]='Something went wrong';
                     return response()->json($response);
                 }
-                $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
+                $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, case when `ad`.`unit` = 1 then 'Kanal Marla' else 'Bigha Biswa' end as `unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
 
                 $tcols = 11;
                 $qcols = array(
@@ -98,7 +101,7 @@ class ReportController extends Controller
                     array('Factor Value', 10, 'f_value_sep', 0, '', 'left'),
                     array('Solatium Value', 10, 's_value_sep', 0, '', 'left'),
                     array('Additional Charge Value', 10, 'ac_value_sep', 0, '', 'left'),
-                    array('Total Value', 10, 't_value_sep', 1, '', 'left'),
+                    array('Total Value', 10, 't_value_sep', 0, '', 'left'),
                 );
 
                 $counter = 0;
@@ -113,6 +116,38 @@ class ReportController extends Controller
                     }
                     $counter = $counter+1;
                 }
+            }elseif ($report_type == 2){
+                if(empty($request->scheme_award_info)){
+                    $response=array();
+                    $response["status"]=0;
+                    $response["msg"]='Please Select Scheme/Award Village';
+                    return response()->json($response);
+                }
+                if(empty($request->award_detail)){
+                    $response=array();
+                    $response["status"]=0;
+                    $response["msg"]='Please Select Award Detail';
+                    return response()->json($response);
+                }
+                $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
+                $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+                if($is_permission == 0){
+                    $response=array();
+                    $response["status"]=0;
+                    $response["msg"]='Something went wrong';
+                    return response()->json($response);
+                }
+                $award_detail_id = intval(Crypt::decrypt($request->award_detail));
+                $rs_result = DB::select(DB::raw("SELECT `abd`.`name_complete_e`, `abd`.`name_complete_l`, concat(`abd`.`hissa_numerator`,'/',`abd`.`hissa_denominator`) as `hissa`, `abd`.`value_txt`, `abd`.`page_no`, `adf`.`file_description` from `award_beneficiary_detail` `abd` inner join `award_detail_file` `adf` on `adf`.`id` = `abd`.`award_detail_file_id` where `award_detail_id` = $award_detail_id order by `abd`.`id`;"));
+                $tcols = 6;
+                $qcols = array(
+                    array('Name (E)',10, 'name_complete_e', 0, '', 'left'),
+                    array('Name (H)', 10, 'name_complete_l', 0, '', 'left'),
+                    array('Hissa',10, 'hissa', 0, '', 'left'),
+                    array('Value', 10, 'value_txt', 0, '', 'left'),
+                    array('Award Detail File', 10, 'file_description', 0, '', 'left'),
+                    array('Page No.', 10, 'page_no', 0, '', 'left'),
+                );
             }
 
             $response = array();
@@ -132,11 +167,17 @@ class ReportController extends Controller
             $role_id = MyFuncs::getUserRoleId();
             $report_type = intval(Crypt::decrypt($request->report_type));
             if($report_type == 0){
-                return 'Please Select Report Type'; 
+                $response=array();
+                $response["status"]=0;
+                $response["msg"]='Please Select Report Type';
+                return response()->json($response);  
             }
             $have_permission = MyFuncs::isPermission_reports($role_id, $report_type);
             if (! $have_permission){
-                return 'Not Permission';
+                $response=array();
+                $response["status"]=0;
+                $response["msg"]='Not Permission';
+                return response()->json($response);
             }
             
             if ($report_type == 1){
@@ -148,7 +189,7 @@ class ReportController extends Controller
                 if($is_permission == 0){
                     return 'Something went wrong';
                 }
-                $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id order by `ad`.`id`;"));
+                $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, case when `ad`.`unit` = 1 then 'Kanal Marla' else 'Bigha Biswa' end as `unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
 
                 $tcols = 11;
                 $qcols = array(
@@ -177,6 +218,29 @@ class ReportController extends Controller
                     }
                     $counter = $counter+1;
                 }
+            }elseif ($report_type == 2){
+                if($request->scheme_award_info == 'null'){
+                    return 'Please Select Scheme/Award Village';
+                }
+                if($request->award_detail == 'null'){
+                    return 'Please Select Award Detail';
+                }
+                $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
+                $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+                if($is_permission == 0){
+                    return 'Something went wrong';
+                }
+                $award_detail_id = intval(Crypt::decrypt($request->award_detail));
+                $rs_result = DB::select(DB::raw("SELECT `abd`.`name_complete_e`, `abd`.`name_complete_l`, concat(`abd`.`hissa_numerator`,'/',`abd`.`hissa_denominator`) as `hissa`, `abd`.`value_txt`, `abd`.`page_no`, `adf`.`file_description` from `award_beneficiary_detail` `abd` inner join `award_detail_file` `adf` on `adf`.`id` = `abd`.`award_detail_file_id` where `award_detail_id` = $award_detail_id order by `abd`.`id`;"));
+                $tcols = 6;
+                $qcols = array(
+                    array('Name (E)',10, 'name_complete_e', 0, '', 'left'),
+                    array('Name (H)', 10, 'name_complete_l', 0, '', 'left'),
+                    array('Hissa',10, 'hissa', 0, '', 'left'),
+                    array('Value', 10, 'value_txt', 0, '', 'left'),
+                    array('Award Detail File', 10, 'file_description', 0, '', 'left'),
+                    array('Page No.', 10, 'page_no', 0, '', 'left'),
+                );
             }
             $path=Storage_path('fonts/');
             $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();

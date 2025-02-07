@@ -10,6 +10,8 @@ use App\Helper\MyFuncs;
 use App\Helper\SelectBox;
 class CommonController extends Controller
 {   
+    protected $e_controller = "CommonController";
+    
     public function blankView()
     {
         return '';

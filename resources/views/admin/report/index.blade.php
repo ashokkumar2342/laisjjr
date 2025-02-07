@@ -44,7 +44,13 @@
 @push('scripts')
 <script>
     function print_1(val) {
-        $('#print_btn').attr("href",'{{route('admin.report.print','')}}'+'&report_type='+$('#report_type').val()+'&scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val());
+        if(val == 1){
+            $('#print_btn').attr("href",'{{route('admin.report.print','')}}'+'&report_type='+$('#report_type').val()+'&scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val());
+        }
+        if(val == 2){
+            $('#print_btn').attr("href",'{{route('admin.report.print','')}}'+'&report_type='+$('#report_type').val()+'&scheme='+$('#scheme_select_box').val()+'&scheme_award_info='+$('#scheme_award_select_box').val()+'&award_detail='+$('#award_detail_select_box').val());
+        }
+        
     }
 </script>
 @endpush

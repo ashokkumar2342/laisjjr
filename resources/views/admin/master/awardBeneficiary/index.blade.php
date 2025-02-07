@@ -27,10 +27,10 @@
                     </select>
                 </div>
                 <div class="col-lg-4 form-group">
-                    <label for="exampleInputEmail1">Scheme Award</label>
+                    <label for="exampleInputEmail1">Scheme/Award Village</label>
                     <span class="fa fa-asterisk"></span>
                     <select name="scheme_award_info" class="form-control select2" id="scheme_award_select_box"  onchange="callAjax(this,'{{ route('admin.common.schemeAwardInfoWiseAwardDetail') }}','award_detail_select_box')" required>
-                        <option selected disabled>Select Scheme Award</option> 
+                        <option selected disabled>Select Scheme/Award Village</option> 
                     </select>
                 </div>
                 <div class="col-lg-4 form-group">

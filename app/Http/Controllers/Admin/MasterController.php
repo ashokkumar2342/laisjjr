@@ -741,7 +741,7 @@ class MasterController extends Controller
                 $scheme_award_info_id = 0;
             }
             $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`unit`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
-            $result_rs = DB::select(DB::raw("SELECT concat(`vil`.`code`, ' - ', `vil`.`name_e`, ' - ', `sai`.`award_no`, ' (', date_format(`sai`.`award_date`, '%d-%m-%Y'), ')') as `opt_text` from `scheme_award_info` `sai` inner join `villages` `vil` on `vil`.`id` = `sai`.`village_id` where `sai`.`id` = $scheme_award_info_id limit 1;"));
+            $result_rs = DB::select(DB::raw("SELECT `sh`.`scheme_name_e`, `th`.`name_e` as `tehsil_name`, `vl`.`name_e` as `vil_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `date_of_award`, `sai`.`year` from `scheme_award_info` `sai` inner join `schemes` `sh` on `sh`.`id` = `sai`.`scheme_id` inner join `tehsils` `th` on `th`.`id` = `sai`.`tehsil_id` inner join `villages` `vl` on `vl`.`id` = `sai`.`village_id` where `sai`.`id` = $scheme_award_info_id limit 1;"));
             return view('admin.master.awardDetail.table',compact('rs_records', 'scheme_award_info_id', 'result_rs'));
         } catch (Exception $e) {
             $e_method = "awardDetailTable";
