@@ -21,11 +21,13 @@
             <tbody>
                 @foreach ($rs_result as $rs_val)
                     <tr>
-                        <td style="width: 10%;" rowspan="2">{{$srno++}}</td>
-                        <td style="width: 90%;">Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>, Mustil No.: <b>{{$rs_val->mustil_no}}</b>, Khasra No.: <b>{{$rs_val->khasra_no}}</b></td>
+                        <td style="width: 10%;vertical-align:middle;" rowspan="2" align="center">{{$srno++}}</td>
+                        <td style="width: 90%;height: 40px;border-bottom: none;">
+                            Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>, Mustil No.: <b>{{$rs_val->mustil_no}}</b>, Khasra No.: <b>{{$rs_val->khasra_no}}</b>, Unit: <b>{{$rs_val->unit}}</b>, Area: <b>{{$rs_val->area}}</b>, Land Value: <b>{{$rs_val->value_sep}}</b>
+                        </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="width: 90%;" style="border-top: none;">
                             @php
                                 $rs_records = DB::select(DB::raw("SELECT `abd`.`name_complete_l`, concat(`abd`.`hissa_numerator`,'/',`abd`.`hissa_denominator`) as `hissa`, `abd`.`value_txt` from `award_beneficiary_detail` `abd` where `award_detail_id` = $rs_val->id order by `abd`.`id`;"));
                             @endphp
@@ -36,15 +38,18 @@
                                     @endphp
                                     @foreach ($rs_records as $rs_val_rec)
                                         <tr>
-                                            <td style="width: 10%;">{{$b_srno++}}</td>
+                                            <td style="width: 10%;height: 30px;">{{$b_srno++}}</td>
                                             <td style="width: 30%;">{{$rs_val_rec->name_complete_l}}</td>
-                                            <td style="width: 30%;">{{$rs_val_rec->hissa}}</td>
-                                            <td style="width: 30%;">{{$rs_val_rec->value_txt}}</td>
+                                            <td style="width: 30%;text-align: center;">{{$rs_val_rec->hissa}}</td>
+                                            <td style="width: 30%;text-align: right;">{{$rs_val_rec->value_txt}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </td>
+                    </tr>
+                    <tr>
+                        <td style="border: display none;">&nbsp;</td>
                     </tr>
                 @endforeach
             </tbody>
