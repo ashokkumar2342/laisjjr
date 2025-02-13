@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="btn-group table-responsive">
-                        <b>Scheme:: <span style="color:green;">{{@$result_rs[0]->scheme_name_e}}</span></b>, &nbsp;<b>Scheme/Award:: <span style="color:green;">{{@$result_rs[0]->tehsil_name}} - {{@$result_rs[0]->vil_name}} - {{@$result_rs[0]->award_no}} - {{@$result_rs[0]->date_of_award}} - {{@$result_rs[0]->year}}</span></b>, &nbsp;<b>Award Detail:: <span style="color:green;">{{@$result_rs[0]->khasra_no}}, {{@$result_rs[0]->khata_no}}, {{@$result_rs[0]->mustil_no}}//{{@$result_rs[0]->khasra_no}}</span></b>
+                        <b>Scheme:: <span style="color:green;">{{@$rs_scheme_detail[0]->scheme_name_e}}</span></b>, &nbsp;<b>Scheme/Award:: <span style="color:green;">{{@$rs_scheme_detail[0]->tehsil_name}} - {{@$rs_scheme_detail[0]->vil_name}} - {{@$rs_scheme_detail[0]->award_no}} - {{@$rs_scheme_detail[0]->date_of_award}} - {{@$rs_scheme_detail[0]->year}}</span></b>, &nbsp;
                     </div>
                 </div>
             </div>                
@@ -17,7 +17,11 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="btn-group table-responsive">
-                        <b>Total Value:: <span style="color:green;">{{@$result_rs[0]->total_value}}</span></b>, &nbsp;<b>Hissa Added:: <span style="color:green;">{{@$val_result_rs[0]->hissa_added}}</span></b>, &nbsp;<b>Total Value Added:: <span style="color:green;">{{@$val_result_rs[0]->total_value_added}}</span></b>
+                        <b>Award Detail:: <span style="color:green;">{{@$rs_scheme_detail[0]->khasra_no}}, {{@$rs_scheme_detail[0]->khata_no}}, {{@$rs_scheme_detail[0]->mustil_no}}//{{@$rs_scheme_detail[0]->khasra_no}}</span></b>, &nbsp;<b>Total Value:: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value}}</span></b>
+                        <br>
+                        <b>Hissa Added:: <span style="color:green;">{{@$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Total Value Added:: <span style="color:green;">{{@$rs_total_entered[0]->total_value_added}}</span></b>
+                        <br>
+                        <b>Balance Hissa:: <span style="color:green;">{{1 - @$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Balanced Value :: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value - @$rs_total_entered[0]->total_value_added}}</span></b>
                     </div>
                 </div>
                 <div class="col-lg-3">
@@ -49,7 +53,7 @@
                     @php
                         $sr_no = 1;
                     @endphp
-                    @foreach($rs_records as $value)
+                    @foreach($rs_beneficiary as $value)
                     <tr>
                         <td class="text-nowrap">
                             @if ($value->status < 2)

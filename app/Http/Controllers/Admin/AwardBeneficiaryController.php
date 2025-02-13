@@ -31,12 +31,12 @@ class AwardBeneficiaryController extends Controller
     { 
         try {
             $award_detail_id = intval(Crypt::decrypt($request->id));
-            $rs_records = DB::select(DB::raw("SELECT `abd`.`id`, `abd`.`name_complete_e`, `abd`.`name_complete_l`, `abd`.`hissa_numerator`, `abd`.`hissa_denominator`, `abd`.`value_txt`, `abd`.`page_no`, `adf`.`file_description` from `award_beneficiary_detail` `abd` inner join `award_detail_file` `adf` on `adf`.`id` = `abd`.`award_detail_file_id` where `award_detail_id` = $award_detail_id and `status` < 3;"));
+            $rs_beneficiary = DB::select(DB::raw("SELECT `abd`.`id`, `abd`.`name_complete_e`, `abd`.`name_complete_l`, `abd`.`hissa_numerator`, `abd`.`hissa_denominator`, `abd`.`value_txt`, `abd`.`page_no`, `adf`.`file_description`, `abd`.`status` from `award_beneficiary_detail` `abd` left join `award_detail_file` `adf` on `adf`.`id` = `abd`.`award_detail_file_id` where `award_detail_id` = $award_detail_id and `status` < 3;"));
 
-            $result_rs = DB::select(DB::raw("SELECT `sh`.`scheme_name_e`, `th`.`name_e` as `tehsil_name`, `vl`.`name_e` as `vil_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `date_of_award`, `sai`.`year`, `ad`.`khasra_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`total_value` from `award_detail` `ad` inner join `scheme_award_info` `sai` on `sai`.`id` = `ad`.`scheme_award_info_id` inner join `schemes` `sh` on `sh`.`id` = `sai`.`scheme_id` inner join `tehsils` `th` on `th`.`id` = `sai`.`tehsil_id` inner join `villages` `vl` on `vl`.`id` = `sai`.`village_id` where `ad`.`id` = $award_detail_id limit 1;"));  
+            $rs_scheme_detail = DB::select(DB::raw("SELECT `sh`.`scheme_name_e`, `th`.`name_e` as `tehsil_name`, `vl`.`name_e` as `vil_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `date_of_award`, `sai`.`year`, `ad`.`khasra_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`total_value` from `award_detail` `ad` inner join `scheme_award_info` `sai` on `sai`.`id` = `ad`.`scheme_award_info_id` inner join `schemes` `sh` on `sh`.`id` = `sai`.`scheme_id` inner join `tehsils` `th` on `th`.`id` = `sai`.`tehsil_id` inner join `villages` `vl` on `vl`.`id` = `sai`.`village_id` where `ad`.`id` = $award_detail_id limit 1;"));  
 
-            $val_result_rs = DB::select(DB::raw("SELECT sum(`abd`.`hissa_numerator`/`abd`.`hissa_denominator`) as `hissa_added`, sum(`abd`.`value`) as `total_value_added` from `award_beneficiary_detail` `abd` where `abd`.`award_detail_id` = $award_detail_id and `status` <> 3;"));  
-            return view('admin.master.awardBeneficiary.table',compact('rs_records', 'award_detail_id', 'result_rs'));
+            $rs_total_entered = DB::select(DB::raw("SELECT sum(`abd`.`hissa_numerator`/`abd`.`hissa_denominator`) as `hissa_added`, sum(`abd`.`value`) as `total_value_added`, count(*) as `total_rec` from `award_beneficiary_detail` `abd` where `abd`.`award_detail_id` = $award_detail_id and `status` <> 3;"));  
+            return view('admin.master.awardBeneficiary.table',compact('rs_beneficiary', 'award_detail_id', 'rs_scheme_detail', 'rs_total_entered'));
         } catch (Exception $e) {
             $e_method = "awardBeneficiaryTable";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
