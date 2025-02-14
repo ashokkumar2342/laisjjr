@@ -55,7 +55,7 @@ class ReportController extends Controller
     public function reportResult(Request $request)
     {
         try {
-            $show_total_row = 1;
+            $show_total_row = 0;
             $role_id = MyFuncs::getUserRoleId();
             $report_type = intval(Crypt::decrypt($request->report_type));
             if($report_type == 0){
@@ -73,6 +73,7 @@ class ReportController extends Controller
             }
             
             if ($report_type == 1){
+                $show_total_row = 1;
                 if(empty($request->scheme_award_info)){
                     $response=array();
                     $response["status"]=0;
@@ -88,6 +89,20 @@ class ReportController extends Controller
                     return response()->json($response);
                 }
                 $rs_result = DB::select(DB::raw("SELECT `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, case when `ad`.`unit` = 1 then 'Kanal Marla' else 'Bigha Biswa' end as `unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
+                
+                $rs_total = DB::select(DB::raw("SELECT ifnull(sum(`ad`.`kanal`),0) as `gt_kanal`, ifnull(sum(`ad`.`marla`),0) as `gt_marla`, ifnull(sum(`ad`.`sirsai`),0) as `gt_sarsai`, `uf_convert_value_with_seperator`(ifnull(sum(`ad`.`value`),0)) as `gt_value`, `uf_convert_value_with_seperator`(ifnull(sum(`ad`.`factor_value`),0)) as `gt_f_value`, `uf_convert_value_with_seperator`(ifnull(sum(`ad`.`solatium_value`),0)) as `gt_s_value`, `uf_convert_value_with_seperator`(ifnull(sum(`ad`.`additional_charge_value`),0)) as `gt_ac_value`, `uf_convert_value_with_seperator`(ifnull(sum(`ad`.`total_value`),0)) as `gt_total_value`, count(*) as `total_rec` from `award_detail` `ad`  where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 ;"));
+
+                $sarsai = 0;
+                $marla = 0;
+                $kanal = 0;
+                $sarsai = $rs_total[0]->gt_sarsai;
+                $marla = $rs_total[0]->gt_marla + intdiv($sarsai, 9);
+                $sarsai = fmod($sarsai,9);
+
+                $kanal = $rs_total[0]->gt_kanal + intdiv($marla, 20);
+                $marla = fmod($marla,20);
+
+                $total_area = $kanal." - ".$marla." - ".$sarsai;
 
                 $tcols = 11;    //Column Caption, Column Width, Field Name, is Numeric, Last Row Values (Total), text-alignment (left, right, center, justify)
                 $qcols = array(
@@ -95,38 +110,19 @@ class ReportController extends Controller
                     array('Khata No.', 10, 'khata_no', 0, '', 'left'),
                     array('Mustil No.',10, 'mustil_no', 0, '', 'left'),
                     array('Khasra No.', 10, 'khasra_no', 0, '', 'left'),
-                    array('Unit', 10, 'unit', 0, '', 'left'),
-                    array('Area', 10, 'area', 0, '', 'left'),
-                    array('Land Value', 10, 'value_sep', 0, '', 'left'),
-                    array('Factor Value', 10, 'f_value_sep', 0, '', 'left'),
-                    array('Solatium Value', 10, 's_value_sep', 0, '', 'left'),
-                    array('Additional Charge Value', 10, 'ac_value_sep', 0, '', 'left'),
-                    array('Total Value', 10, 't_value_sep', 0, '', 'left'),
+                    array('Unit', 10, 'unit', 0, 'Total', 'left'),
+                    array('Area', 10, 'area', 0, $total_area, 'right'),
+                    array('Land Value', 10, 'value_sep', 0, $rs_total[0]->gt_value, 'right'),
+                    array('Factor Value', 10, 'f_value_sep', 0, $rs_total[0]->gt_f_value, 'right'),
+                    array('Solatium Value', 10, 's_value_sep', 0, $rs_total[0]->gt_s_value, 'right'),
+                    array('Additional Charge Value', 10, 'ac_value_sep', 0, $rs_total[0]->gt_ac_value, 'right'),
+                    array('Total Value', 10, 't_value_sep', 0, $rs_total[0]->gt_total_value, 'right'),
                 );
-
-                $counter = 0;
-                while ($counter < $tcols ){
-                    if($qcols[$counter][3] == 1){
-                        $column_name = $qcols[$counter][2];
-
-                        $temp_array = array_column($rs_result, $column_name);
-                        $total_value = array_sum($temp_array);
-                        $qcols[$counter][4] = number_format($total_value, 2, '.', '');
-
-                    }
-                    $counter = $counter+1;
-                }
             }elseif ($report_type == 2){
                 if(empty($request->scheme_award_info)){
                     $response=array();
                     $response["status"]=0;
                     $response["msg"]='Please Select Scheme/Award Village';
-                    return response()->json($response);
-                }
-                if(empty($request->award_detail)){
-                    $response=array();
-                    $response["status"]=0;
-                    $response["msg"]='Please Select Award Detail';
                     return response()->json($response);
                 }
                 $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
@@ -137,17 +133,11 @@ class ReportController extends Controller
                     $response["msg"]='Something went wrong';
                     return response()->json($response);
                 }
-                $award_detail_id = intval(Crypt::decrypt($request->award_detail));
-                $rs_result = DB::select(DB::raw("SELECT `abd`.`name_complete_e`, `abd`.`name_complete_l`, concat(`abd`.`hissa_numerator`,'/',`abd`.`hissa_denominator`) as `hissa`, `abd`.`value_txt`, `abd`.`page_no`, `adf`.`file_description` from `award_beneficiary_detail` `abd` inner join `award_detail_file` `adf` on `adf`.`id` = `abd`.`award_detail_file_id` where `award_detail_id` = $award_detail_id order by `abd`.`id`;"));
-                $tcols = 6;
-                $qcols = array(
-                    array('Name (E)',10, 'name_complete_e', 0, '', 'left'),
-                    array('Name (H)', 10, 'name_complete_l', 0, '', 'left'),
-                    array('Hissa',10, 'hissa', 0, '', 'left'),
-                    array('Value', 10, 'value_txt', 0, '', 'left'),
-                    array('Award Detail File', 10, 'file_description', 0, '', 'left'),
-                    array('Page No.', 10, 'page_no', 0, '', 'left'),
-                );
+                $rs_result = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, case when `ad`.`unit` = 1 then 'Kanal Marla' else 'Bigha Biswa' end as `unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
+                $response = array();
+                $response['status'] = 1;            
+                $response['data'] =view('admin.report.AwardBeneficiaryDetail.result', compact('rs_result', 'tcols', 'qcols', 'show_total_row'))->render();
+                return response()->json($response);
             }
 
             $response = array();
@@ -203,6 +193,7 @@ class ReportController extends Controller
             }
             
             if ($report_type == 1){
+                $report_header = "Award Land Detail";
                 $show_total_row = 1;
                 if($request->scheme_award_info == 'null'){
                     return 'Please Select Scheme/Award Village';
@@ -242,7 +233,7 @@ class ReportController extends Controller
                     array('Additional Charge Value', 10, 'ac_value_sep', 0, $rs_total[0]->gt_ac_value, 'right'),
                     array('Total Value', 10, 't_value_sep', 0, $rs_total[0]->gt_total_value, 'right'),
                 );
-                $html = view('admin.report.print', compact('rs_result', 'tcols', 'qcols', 'show_total_row'));
+                $html = view('admin.report.print', compact('rs_result', 'tcols', 'qcols', 'show_total_row', 'report_header'));
             }elseif ($report_type == 2){
                 if($request->scheme_award_info == 'null'){
                     return 'Please Select Scheme/Award Village';

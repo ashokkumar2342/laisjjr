@@ -10,11 +10,18 @@
 <body>
 	<htmlpagefooter name="otherpagesfooter" style="display:none">
 		<div style="text-align:right;">
-			{nbpg}  {PAGENO}
+			Page No. {PAGENO} of {nbpg}
 		</div>
 	</htmlpagefooter>
-	<htmlpageheader name="otherpageheader" style="display:none"> 
-	</htmlpageheader>
+	<htmlpageheader name="otherpageheader">
+        <table style="width:100%;background-color:LightGray;">
+            <tbody>
+                <tr>
+                    <td style="text-align: center;"><b>{{@$report_header}}</b></td>
+                </tr>
+            </tbody>
+        </table>     
+    </htmlpageheader>
 		<table style="border-collapse: collapse; width: 100%;" border="1">
 			<thead style="background-color: #6c757d;color: #fff">
                 <tr>

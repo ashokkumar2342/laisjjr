@@ -2,10 +2,11 @@
     <div class="card card-info">
         <div class="card-body">
             <div class="row">
+                <div class="col-lg-3">
+                    <b>Scheme:: <span style="color:green;">{{@$rs_scheme_detail[0]->scheme_name_e}}</span></b>, &nbsp;<b>
+                </div>
                 <div class="col-lg-12">
-                    <div class="btn-group table-responsive">
-                        <b>Scheme:: <span style="color:green;">{{@$rs_scheme_detail[0]->scheme_name_e}}</span></b>, &nbsp;<b>Scheme/Award:: <span style="color:green;">{{@$rs_scheme_detail[0]->tehsil_name}} - {{@$rs_scheme_detail[0]->vil_name}} - {{@$rs_scheme_detail[0]->award_no}} - {{@$rs_scheme_detail[0]->date_of_award}} - {{@$rs_scheme_detail[0]->year}}</span></b>, &nbsp;
-                    </div>
+                    <b>Scheme/Award:: <span style="color:green;">{{@$rs_scheme_detail[0]->tehsil_name}} - {{@$rs_scheme_detail[0]->vil_name}} - {{@$rs_scheme_detail[0]->award_no}} - {{@$rs_scheme_detail[0]->date_of_award}} - {{@$rs_scheme_detail[0]->year}}</span></b>
                 </div>
             </div>                
         </div>
@@ -15,19 +16,18 @@
     <div class="card card-info">
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-9">
-                    <div class="btn-group table-responsive">
-                        <b>Award Detail:: <span style="color:green;">{{@$rs_scheme_detail[0]->khasra_no}}, {{@$rs_scheme_detail[0]->khata_no}}, {{@$rs_scheme_detail[0]->mustil_no}}//{{@$rs_scheme_detail[0]->khasra_no}}</span></b>, &nbsp;<b>Total Value:: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value}}</span></b>
-                        <br>
-                        <b>Hissa Added:: <span style="color:green;">{{@$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Total Value Added:: <span style="color:green;">{{@$rs_total_entered[0]->total_value_added}}</span></b>
-                        <br>
-                        <b>Balance Hissa:: <span style="color:green;">{{1 - @$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Balanced Value :: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value - @$rs_total_entered[0]->total_value_added}}</span></b>
-                    </div>
+                <div class="col-lg-12">                    
+                    <b>Award Detail:: <span style="color:green;">{{@$rs_scheme_detail[0]->khasra_no}}, {{@$rs_scheme_detail[0]->khata_no}}, {{@$rs_scheme_detail[0]->mustil_no}}//{{@$rs_scheme_detail[0]->khasra_no}}</span></b>, &nbsp;<b>Total Value:: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value}}</span></b>
                 </div>
-                <div class="col-lg-3">
-                    <div class="btn-group table-responsive">
-                        <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?award_detail={{Crypt::encrypt($award_detail_id)}}')">Add Award Beneficiary Detail</button>
-                    </div>
+                <div class="col-lg-12">
+                    <b>Hissa Added:: <span style="color:green;">{{@$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Total Value Added:: <span style="color:green;">{{@$rs_total_entered[0]->total_value_added}}</span></b>
+                </div>
+                <div class="col-lg-12">
+                    <b>Balance Hissa:: <span style="color:green;">{{1 - @$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Balanced Value :: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value - @$rs_total_entered[0]->total_value_added}}</span></b>
+                </div>
+                <div class="col-lg-12 text-right">
+                    <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?award_detail={{Crypt::encrypt($award_detail_id)}}')">Add Award Beneficiary Detail</button>
+                    
                 </div>
             </div>                
         </div>

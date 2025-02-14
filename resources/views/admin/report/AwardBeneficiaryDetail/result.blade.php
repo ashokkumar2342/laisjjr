@@ -1,28 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    	<style>
-        	@page { footer: html_otherpagesfooter; 
-        		header: html_otherpageheader;
-        	}  
-        </style>
-    </head>
-    <body>
-    	<htmlpagefooter name="otherpagesfooter" style="display:none">
-    		<div style="text-align:right;">
-    			Page No. {PAGENO} of {nbpg}
-    		</div>
-    	</htmlpagefooter>
-    	<htmlpageheader name="otherpageheader" style="display:none">
-            <table style="width:100%;background-color:LightGray;">
-                <tbody>
-                    <tr>
-                        <td style="text-align: center;"><b>Award Beneficiary Detail</b></td>
-                    </tr>
-                </tbody>
-            </table> 
-        </htmlpageheader>
-        <table style="border-collapse: collapse; width: 100%; height: 39px;" border="1">
+<div class="col-lg-12">
+    <fieldset class="fieldset_border">
+        <div class="table-responsive"> 
+            <table style="border-collapse: collapse; width: 100%; height: 39px;" border="1">
             @php
                 $srno = 1;
             @endphp
@@ -57,10 +36,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="border: none;">&nbsp;</td>
+                        <td style="border:none;">&nbsp;</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-	</body>
-</html>
+        </div>
+    </fieldset>
+</div>

@@ -877,6 +877,32 @@ class MasterController extends Controller
         }
     }
 
+    public function awardBeneficiaryView($rec_id)
+    {
+        try {
+            $rec_id = intval(Crypt::decrypt($rec_id));
+
+            if($rec_id > 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $rec_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }
+            }
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $error_message = 'Something Went Wrong';
+                return view('admin.common.error_popup', compact('error_message'));
+            }
+
+            $rs_beneficiary = DB::select(DB::raw("SELECT `abd`.`id`, `abd`.`name_complete_e`, `abd`.`name_complete_l`, `abd`.`hissa_numerator`, `abd`.`hissa_denominator`, `abd`.`value_txt`, `abd`.`page_no`, `adf`.`file_description`, `abd`.`status` from `award_beneficiary_detail` `abd` left join `award_detail_file` `adf` on `adf`.`id` = `abd`.`award_detail_file_id` where `award_detail_id` = $rec_id;"));   
+            return view('admin.master.awardDetail.beneficiary_view',compact('rs_beneficiary'));
+        } catch (\Exception $e) {
+            $e_method = "awardDetailDelete";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
     public function awardDetailFileIndex()
     { 
         try {

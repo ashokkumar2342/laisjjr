@@ -1,10 +1,15 @@
 <div class="col-lg-12">                
-    <div class="card card-info" style="background: #6c757d;color: #fff;">
+    <div class="card card-info">
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-10">
-                    <div class="btn-group table-responsive">
-                        Scheme:: <b>{{@$result_rs[0]->scheme_name_e}}</b>, Scheme/Award Village:: <b>{{@$result_rs[0]->tehsil_name}}, {{@$result_rs[0]->vil_name}}, {{@$result_rs[0]->award_no}},  {{@$result_rs[0]->date_of_award}}, {{@$result_rs[0]->year}}</b>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <b>Scheme:: <span style="color:green;">{{@$result_rs[0]->scheme_name_e}}</span></b> , 
+                        </div>
+                        <div class="col-lg-9">
+                            <b>Scheme/Award Village:: <span style="color:green;">{{@$result_rs[0]->tehsil_name}}, {{@$result_rs[0]->vil_name}}, {{@$result_rs[0]->award_no}},  {{@$result_rs[0]->date_of_award}}, {{@$result_rs[0]->year}}</span></b>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
@@ -51,6 +56,8 @@
 
                                 <button type="button" class="btn btn-sm btn-danger" select-triger="scheme_award_select_box" success-popup="true" onclick="if (confirm('Are you sure you want to delete this record?')){callAjax(this,'{{ route('admin.master.award.detail.delete', Crypt::encrypt($value->id)) }}') } else{console_Log('cancel') }">Delete</button>
                             @endif
+                            <button type="button" class="btn btn-info btn-sm" data-table-new-without-pagination_2="ajax_data_table" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.view', Crypt::encrypt($value->id)) }}')"><i class="fa fa-eye"></i> View Beneficiary</button>
+                            <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLarge(this,'{{ route('admin.master.award.beneficiary.addform', Crypt::encrypt(0)) }}'+'?award_detail={{Crypt::encrypt($value->id)}}')">Add Beneficiary Detail</button>
                         </td>
                         <td>{{ $sr_no++ }}</td>
                         <td>{{ $value->khewat_no }}</td>
