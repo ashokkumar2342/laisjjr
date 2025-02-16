@@ -18,6 +18,10 @@ class MasterController extends Controller
     public function stateIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(11);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_records = DB::select(DB::raw("SELECT * from `states` Order by `name_e`;"));  
             return view('admin.master.state.index',compact('rs_records'));
         } catch (\Exception $e) {
@@ -30,6 +34,10 @@ class MasterController extends Controller
     public function stateAddForm($rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(11);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_records = DB::select(DB::raw("SELECT * from `states` where `id` = $rec_id Order by `name_e`;"));  
             return view('admin.master.state.add_form',compact('rs_records', 'rec_id'));
@@ -42,6 +50,11 @@ class MasterController extends Controller
     public function stateStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(11);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'code' => 'required|max:5|unique:states,code,'.$rec_id,             
@@ -89,6 +102,10 @@ class MasterController extends Controller
     public function districtIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(12);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_states = DB::select(DB::raw("SELECT `id` as `opt_id`, `name_e` as `opt_text` from `states` Order by `name_e`;"));  
             return view('admin.master.district.index',compact('rs_states'));
         } catch (Exception $e) {
@@ -101,6 +118,10 @@ class MasterController extends Controller
     public function districtTable(Request $request)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(12);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $state_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `districts` where `state_id` = $state_id Order by `name_e`;"));  
             return view('admin.master.district.table',compact('rs_records'));
@@ -114,6 +135,10 @@ class MasterController extends Controller
     public function districtAddForm(Request $request, $rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(12);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $state_id = intval(Crypt::decrypt($request->state_id));
             $rs_records = DB::select(DB::raw("SELECT * from `districts` where `id` = $rec_id limit 1;"));  
@@ -127,6 +152,11 @@ class MasterController extends Controller
     public function districtStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(12);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'state_id' => 'required',             
@@ -176,6 +206,10 @@ class MasterController extends Controller
     public function tehsilIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(13);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_districts = DB::select(DB::raw("SELECT `id` as `opt_id`, `name_e` as `opt_text` from `districts` Order by `name_e`;"));  
             return view('admin.master.tehsil.index',compact('rs_districts'));
         } catch (Exception $e) {
@@ -188,6 +222,10 @@ class MasterController extends Controller
     public function tehsilTable(Request $request)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(13);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $district_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `tehsils` where `districts_id` = $district_id Order by `name_e`;"));  
             return view('admin.master.tehsil.table',compact('rs_records'));
@@ -201,6 +239,10 @@ class MasterController extends Controller
     public function tehsilAddForm(Request $request, $rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(13);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $district_id = intval(Crypt::decrypt($request->district));
             $rs_records = DB::select(DB::raw("SELECT * from `tehsils` where `id` = $rec_id limit 1;"));  
@@ -214,6 +256,11 @@ class MasterController extends Controller
     public function tehsilStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(13);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'district_id' => 'required',             
@@ -264,6 +311,10 @@ class MasterController extends Controller
     public function villageIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(14);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_district = SelectBox::get_district_access_list_v1(); 
             return view('admin.master.village.index',compact('rs_district'));
         } catch (Exception $e) {
@@ -276,6 +327,10 @@ class MasterController extends Controller
     public function villageTable(Request $request)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(14);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $tehsil_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `villages` where `tehsil_id` = $tehsil_id Order by `name_e`;"));  
             return view('admin.master.village.table',compact('rs_records'));
@@ -289,6 +344,10 @@ class MasterController extends Controller
     public function villageAddForm(Request $request, $rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(14);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             if ($request->tehsil == 'null') {
                 $error_message = 'Please Select Tehsil';
                 return view('admin.common.error_popup', compact('error_message'));
@@ -307,6 +366,11 @@ class MasterController extends Controller
     public function villageStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(14);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'district_id' => 'required',             
@@ -360,6 +424,10 @@ class MasterController extends Controller
     public function schemeIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(15);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_records = DB::select(DB::raw("SELECT * from `schemes` Order by `scheme_name_e`;"));  
             return view('admin.master.scheme.index',compact('rs_records'));
         } catch (\Exception $e) {
@@ -372,6 +440,10 @@ class MasterController extends Controller
     public function schemeAddForm($rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(15);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_records = DB::select(DB::raw("SELECT * from `schemes` where `id` = $rec_id limit 1;"));  
             return view('admin.master.scheme.add_form',compact('rs_records', 'rec_id'));
@@ -384,6 +456,11 @@ class MasterController extends Controller
     public function schemeStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(15);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'name_e' => 'required|max:50',            
@@ -426,6 +503,10 @@ class MasterController extends Controller
     public function schemeAwardIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(16);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
             return view('admin.master.schemeAwardInfo.index',compact('rs_schemes'));
         } catch (\Exception $e) {
@@ -438,6 +519,10 @@ class MasterController extends Controller
     public function schemeAwardTable(Request $request)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(16);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $scheme_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT `sai`.`id`, `d`.`name_e` as `d_name`, `t`.`name_e` as `t_name`, `v`.`name_e` as `v_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `award_date`, `year` from `scheme_award_info` `sai` inner join `districts` `d` on `d`.`id` = `sai`.`district_id` inner join `tehsils` `t` on `t`.`id` = `sai`.`tehsil_id` inner join `villages` `v` on `v`.`id` = `sai`.`village_id` where `sai`.`scheme_id` =  $scheme_id order by `d`.`name_e`, `t`.`name_e`, `v`.`name_e`;"));  
             return view('admin.master.schemeAwardInfo.table',compact('rs_records', 'scheme_id'));
@@ -451,6 +536,10 @@ class MasterController extends Controller
     public function schemeAwardAddForm(Request $request, $rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(16);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_district = "";
             $scheme_id = "";
@@ -481,6 +570,11 @@ class MasterController extends Controller
     public function schemeAwardStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(16);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             if($rec_id == 0){
                 $rules=[
@@ -581,6 +675,10 @@ class MasterController extends Controller
     public function schemeAwardFileIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(17);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
             return view('admin.master.schemeAwardFileInfo.index',compact('rs_schemes'));
         } catch (\Exception $e) {
@@ -593,6 +691,10 @@ class MasterController extends Controller
     public function schemeAwardFileTable(Request $request)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(17);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `scheme_award_info_file` where `scheme_award_info_id` = $scheme_award_info_id;"));  
             return view('admin.master.schemeAwardFileInfo.table',compact('rs_records', 'scheme_award_info_id'));
@@ -605,11 +707,10 @@ class MasterController extends Controller
     public function schemeAwardFileAddForm(Request $request, $rec_id)
     { 
         try {
-            
-            // if ($request->scheme_award_info == 'null') {
-            //     $error_message = 'Please Select Scheme Awerd';
-            //     return view('admin.common.error_popup', compact('error_message'));
-            // }
+            $permission_flag = MyFuncs::isPermission_route(17);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $scheme_award_info_id = 0;
             if($rec_id == 0 ){
@@ -626,6 +727,11 @@ class MasterController extends Controller
     public function schemeAwardFileStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(17);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             if($rec_id == 0){
                 $rules=[
@@ -723,6 +829,10 @@ class MasterController extends Controller
     public function awardDetailIndex()
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
             return view('admin.master.awardDetail.index',compact('rs_schemes'));
         } catch (\Exception $e) {
@@ -735,6 +845,10 @@ class MasterController extends Controller
     public function awardDetailTable(Request $request)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
             $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
             if($is_permission == 0){
@@ -752,6 +866,10 @@ class MasterController extends Controller
     public function awardDetailAddForm(Request $request, $rec_id)
     { 
         try {
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                return view('admin.common.error_popup')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             if($rec_id == 0){
                 $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));    
@@ -780,6 +898,11 @@ class MasterController extends Controller
     public function awardDetailStore(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'scheme_award_info_id' => 'required',

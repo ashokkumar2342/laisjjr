@@ -17,6 +17,10 @@ class AccountController extends Controller
     public function addNewUser()
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(1);
+            if(!$permission_flag){
+                return view('admin.common.error');
+            }
             $user_role = MyFuncs::getUserRoleId();
             $roles =DB::select(DB::raw("SELECT `id`, `name` from `roles` where `id`  > $user_role Order By `name`;"));
             return view('admin.account.add_new_user', compact('roles'));
@@ -29,6 +33,11 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(1);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);
+            }
             $rules=[
                 'name' => 'required|string|min:3|max:50',             
                 'role_id' => 'required',
@@ -131,6 +140,10 @@ class AccountController extends Controller
     public function userList()
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(2);
+            if(!$permission_flag){
+                return view('admin.common.error');
+            }
             $user_id = MyFuncs::getUserId();
             $role_id = 0;
             $user_list = DB::select(DB::raw("SELECT `a`.`id`, `a`.`name`, `a`.`email`, `a`.`mobile`, `a`.`status`, `r`.`name` as `role_name` from `admins` `a`Inner Join `roles` `r` on `a`.`role_id` = `r`.`id` where `a`.`created_by` = $user_id Order By `a`.`name`;"));
@@ -144,6 +157,10 @@ class AccountController extends Controller
     public function userEdit(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(2);
+            if(!$permission_flag){
+                return view('admin.common.error_popup');
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $user_role = MyFuncs::getUserRoleId();
             $roles =DB::select(DB::raw("SELECT `id`, `name` from `roles` where `id`  > $user_role Order By `name`;"));
@@ -158,6 +175,11 @@ class AccountController extends Controller
     public function userUpdate(Request $request, $rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(2);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rules=[
                 'name' => 'required|string|min:3|max:50',             
@@ -200,6 +222,10 @@ class AccountController extends Controller
     public function userStatus($rec_id)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(2);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_fatch = DB::select(DB::raw("SELECT `status`, `email` from `admins` where `id` = $rec_id limit 1;"));
             $status = $rs_fatch[0]->status;
@@ -229,6 +255,10 @@ class AccountController extends Controller
     public function changePassword()
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(3);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             return view('admin.account.change_password');
         } catch (\Exception $e) {
             $e_method = "changePassword";
@@ -240,6 +270,11 @@ class AccountController extends Controller
     public function changePasswordStore(Request $request)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(3);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             $rules=[
                 'oldpassword'=> 'required',
                 'password'=> 'required',
@@ -302,6 +337,10 @@ class AccountController extends Controller
     public function resetPassWord()
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(4);
+            if(!$permission_flag){
+                return view('admin.common.error')
+            }
             $userid = MyFuncs::getUserId();
             $role_id = MyFuncs::getUserRoleId();
             if($role_id == 1){
@@ -319,6 +358,11 @@ class AccountController extends Controller
     public function resetPassWordChange(Request $request)
     {
         try {
+            $permission_flag = MyFuncs::isPermission_route(4);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
             if ($request->new_pass!=$request->con_pass) {
                 $response=['status'=>0,'msg'=>'Password Not Match'];
                 return response()->json($response);
@@ -359,7 +403,7 @@ class AccountController extends Controller
     Public function districtAssignIndex()
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(3);
+            $permission_flag = MyFuncs::isPermission_route(5);
             if(!$permission_flag){
                 return view('admin.common.error');
             }
@@ -376,7 +420,7 @@ class AccountController extends Controller
     Public function districtAssignTable(Request $request)
     {  
         try {
-            $permission_flag = MyFuncs::isPermission_route(3);
+            $permission_flag = MyFuncs::isPermission_route(5);
             if(!$permission_flag){
                 return view('admin.common.error');
             }
@@ -393,7 +437,7 @@ class AccountController extends Controller
     Public function districtAssignStore(Request $request)
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(3);
+            $permission_flag = MyFuncs::isPermission_route(5);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
                 return response()->json($response);
@@ -433,7 +477,7 @@ class AccountController extends Controller
     public function districtAssignDelete($rec_id)
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(3);
+            $permission_flag = MyFuncs::isPermission_route(5);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
                 return response()->json($response);
@@ -452,7 +496,7 @@ class AccountController extends Controller
     Public function tehsilAssignIndex()
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(4);
+            $permission_flag = MyFuncs::isPermission_route(6);
             if(!$permission_flag){
                 return view('admin.common.error');
             }
@@ -470,7 +514,7 @@ class AccountController extends Controller
     Public function tehsilAssignTable(Request $request)
     { 
         try {
-            $permission_flag = MyFuncs::isPermission_route(4);
+            $permission_flag = MyFuncs::isPermission_route(6);
             if(!$permission_flag){
                 return view('admin.common.error');
             }
@@ -487,7 +531,7 @@ class AccountController extends Controller
     Public function tehsilAssignStore(Request $request)
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(4);
+            $permission_flag = MyFuncs::isPermission_route(6);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
                 return response()->json($response);
@@ -543,7 +587,7 @@ class AccountController extends Controller
     public function tehsilAssignDelete($rec_id)
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(4);
+            $permission_flag = MyFuncs::isPermission_route(6);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
                 return response()->json($response);
@@ -562,7 +606,7 @@ class AccountController extends Controller
     Public function villageAssignIndex()
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(5);
+            $permission_flag = MyFuncs::isPermission_route(7);
             if(!$permission_flag){
                 return view('admin.common.error');
             }
@@ -579,7 +623,7 @@ class AccountController extends Controller
     Public function villageAssignTable(Request $request)
     { 
         try {
-            $permission_flag = MyFuncs::isPermission_route(5);
+            $permission_flag = MyFuncs::isPermission_route(7);
             if(!$permission_flag){
                 return view('admin.common.error');
             }
@@ -600,7 +644,7 @@ class AccountController extends Controller
     Public function villageAssignStore(Request $request)
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(5);
+            $permission_flag = MyFuncs::isPermission_route(7);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
                 return response()->json($response);
@@ -666,7 +710,7 @@ class AccountController extends Controller
     public function villageAssignDelete($id)
     {
         try {
-            $permission_flag = MyFuncs::isPermission_route(5);
+            $permission_flag = MyFuncs::isPermission_route(7);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
                 return response()->json($response);
