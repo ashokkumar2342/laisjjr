@@ -39,18 +39,33 @@
                         <div class="col-md-12 form_sec_outer_task">
                             <div class="col-md-12 p-0">
                                 <div class="col-md-12 form_field_outer p-0">
-                                    <div class="row form_field_outer_row">
-                                        <div class="col-lg-6">
+                                    <div class="row form_field_outer_row border" style="border: solid #5f97cf;">
+                                        <div class="col-lg-6 form-group">
                                             <label>Mustil No.</label>
                                             <span class="fa fa-asterisk"></span>
                                             <input type="text" name="mustil_no[]" class="form-control" maxlength="10" required value="{{@$rs_records[0]->mustil_no}}"> 
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-6 form-group">
                                             <label>Khasra No.</label>
                                             <span class="fa fa-asterisk"></span>
                                             <input type="text" name="khasra_no[]" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khasra_no}}"> 
                                         </div>
-                                        <div class="col-lg-12 text-right form-group add_del_btn_outer">
+                                        <div class="col-lg-4 form-group">
+                                            <label id="label1">{{$unit==1?'Kanal':'Bigha'}}</label>
+                                            <span class="fa fa-asterisk"></span>
+                                            <input type="text" name="kanal[]" class="form-control" maxlength="5" required value="{{@$rs_records[0]->kanal}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
+                                        </div>
+                                        <div class="col-lg-4 form-group">
+                                            <label id="label2">{{$unit==1?'Marla':'Biswa'}}</label>
+                                            <span class="fa fa-asterisk"></span>
+                                            <input type="text" name="marla[]" class="form-control" maxlength="5" required value="{{@$rs_records[0]->marla}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
+                                        </div>
+                                        <div class="col-lg-4 form-group">
+                                            <label id="label3">{{$unit==1?'Sarsai':'Biswansi'}}</label>
+                                            <span class="fa fa-asterisk"></span>
+                                            <input type="text" name="sirsai[]" class="form-control" maxlength="5" required value="{{@$rs_records[0]->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
+                                        </div>
+                                        <div class="col-lg-12 form-group text-right form-group add_del_btn_outer">
                                             <button type="button" class="add_node_btn_frm_field btn btn-sm" title="Copy or clone this row">
                                                 <i class="fa fa-plus-circle text-success"></i>
                                             </button>
@@ -64,7 +79,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 form-group">
+                        {{-- <div class="col-lg-4 form-group">
                             <label id="label1">{{$unit==1?'Kanal':'Bigha'}}</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="kanal" class="form-control" maxlength="5" required value="{{@$rs_records[0]->kanal}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
@@ -78,7 +93,7 @@
                             <label id="label3">{{$unit==1?'Sarsai':'Biswansi'}}</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="sirsai" class="form-control" maxlength="5" required value="{{@$rs_records[0]->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                        </div>
+                        </div> --}}
                         <div class="col-lg-6 form-group">
                             <label>Land Value</label>
                             <span class="fa fa-asterisk"></span>
