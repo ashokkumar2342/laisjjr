@@ -20,7 +20,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(11);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_records = DB::select(DB::raw("SELECT * from `states` Order by `name_e`;"));  
             return view('admin.master.state.index',compact('rs_records'));
@@ -36,7 +36,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(11);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_records = DB::select(DB::raw("SELECT * from `states` where `id` = $rec_id Order by `name_e`;"));  
@@ -104,7 +104,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(12);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_states = DB::select(DB::raw("SELECT `id` as `opt_id`, `name_e` as `opt_text` from `states` Order by `name_e`;"));  
             return view('admin.master.district.index',compact('rs_states'));
@@ -120,7 +120,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(12);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $state_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `districts` where `state_id` = $state_id Order by `name_e`;"));  
@@ -137,7 +137,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(12);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $state_id = intval(Crypt::decrypt($request->state_id));
@@ -208,7 +208,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(13);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_districts = DB::select(DB::raw("SELECT `id` as `opt_id`, `name_e` as `opt_text` from `districts` Order by `name_e`;"));  
             return view('admin.master.tehsil.index',compact('rs_districts'));
@@ -224,7 +224,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(13);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $district_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `tehsils` where `districts_id` = $district_id Order by `name_e`;"));  
@@ -241,7 +241,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(13);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $district_id = intval(Crypt::decrypt($request->district));
@@ -313,7 +313,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(14);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_district = SelectBox::get_district_access_list_v1(); 
             return view('admin.master.village.index',compact('rs_district'));
@@ -329,7 +329,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(14);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $tehsil_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `villages` where `tehsil_id` = $tehsil_id Order by `name_e`;"));  
@@ -346,7 +346,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(14);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             if ($request->tehsil == 'null') {
                 $error_message = 'Please Select Tehsil';
@@ -426,7 +426,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(15);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_records = DB::select(DB::raw("SELECT * from `schemes` Order by `scheme_name_e`;"));  
             return view('admin.master.scheme.index',compact('rs_records'));
@@ -442,7 +442,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(15);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_records = DB::select(DB::raw("SELECT * from `schemes` where `id` = $rec_id limit 1;"));  
@@ -505,7 +505,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(16);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
             return view('admin.master.schemeAwardInfo.index',compact('rs_schemes'));
@@ -521,7 +521,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(16);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $scheme_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT `sai`.`id`, `d`.`name_e` as `d_name`, `t`.`name_e` as `t_name`, `v`.`name_e` as `v_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `award_date`, `year` from `scheme_award_info` `sai` inner join `districts` `d` on `d`.`id` = `sai`.`district_id` inner join `tehsils` `t` on `t`.`id` = `sai`.`tehsil_id` inner join `villages` `v` on `v`.`id` = `sai`.`village_id` where `sai`.`scheme_id` =  $scheme_id order by `d`.`name_e`, `t`.`name_e`, `v`.`name_e`;"));  
@@ -538,7 +538,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(16);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_district = "";
@@ -677,7 +677,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(17);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
             return view('admin.master.schemeAwardFileInfo.index',compact('rs_schemes'));
@@ -693,7 +693,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(17);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
             $rs_records = DB::select(DB::raw("SELECT * from `scheme_award_info_file` where `scheme_award_info_id` = $scheme_award_info_id;"));  
@@ -709,7 +709,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(17);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $scheme_award_info_id = 0;
@@ -831,7 +831,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(18);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rs_schemes = SelectBox::get_schemes_access_list_v1();
             return view('admin.master.awardDetail.index',compact('rs_schemes'));
@@ -847,7 +847,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(18);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $scheme_award_info_id = intval(Crypt::decrypt($request->id));
             $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
@@ -868,7 +868,7 @@ class MasterController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(18);
             if(!$permission_flag){
-                return view('admin.common.error_popup')
+                return view('admin.common.error_popup');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             if($rec_id == 0){
@@ -897,7 +897,7 @@ class MasterController extends Controller
 
     public function awardDetailStore(Request $request, $rec_id)
     {
-        try {
+        try { return $request;
             $permission_flag = MyFuncs::isPermission_route(18);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
