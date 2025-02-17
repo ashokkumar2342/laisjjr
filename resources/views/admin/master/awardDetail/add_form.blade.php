@@ -64,26 +64,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-12 form-group">
-                            <label>Unit</label>
-                            <span class="fa fa-asterisk"></span>
-                            <select name="unit" id="unit" class="form-control" onchange="changeLabel()">
-                                <option value="1" {{@$rs_records[0]->unit==1?'selected':''}}>Kanal Marla</option>
-                                <option value="2" {{@$rs_records[0]->unit==2?'selected':''}}>Bigha Biswa</option>
-                            </select>
-                        </div>
                         <div class="col-lg-4 form-group">
-                            <label id="label1">Kanal</label>
+                            <label id="label1">{{$unit==1?'Kanal':'Bigha'}}</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="kanal" class="form-control" maxlength="5" required value="{{@$rs_records[0]->kanal}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
                         </div>
                         <div class="col-lg-4 form-group">
-                            <label id="label2">Marla</label>
+                            <label id="label2">{{$unit==1?'Marla':'Biswa'}}</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="marla" class="form-control" maxlength="5" required value="{{@$rs_records[0]->marla}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
                         </div>
                         <div class="col-lg-4 form-group">
-                            <label id="label3">Sarsai</label>
+                            <label id="label3">{{$unit==1?'Sarsai':'Biswansi'}}</label>
                             <span class="fa fa-asterisk"></span>
                             <input type="text" name="sirsai" class="form-control" maxlength="5" required value="{{@$rs_records[0]->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
                         </div>
@@ -120,24 +112,6 @@
         </div>
     </div>
 </div>
-<script>
-    function changeLabel() {
-        var selectedOption = document.getElementById("unit").value;
-        var label1 = document.getElementById("label1");
-        var label2 = document.getElementById("label2");
-        var label3 = document.getElementById("label3");
-
-        if (selectedOption == 1) {
-            label1.textContent = "Kanal";
-            label2.textContent = "Marla";
-            label3.textContent = "Sarsai";
-        }else if (selectedOption == 2) {
-            label1.textContent = "Bigha";
-            label2.textContent = "Biswa";
-            label3.textContent = "Biswansi";
-        }
-    }
-</script>
 <script>
     $(document).ready(function () {
         $(".sum-input").keyup(function () {

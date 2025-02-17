@@ -52,7 +52,15 @@
                         <label>Jamabandi Year (YYYY-YYYY)</label>
                         <span class="fa fa-asterisk"></span>
                         <input type="text" name="year" class="form-control" placeholder="YYYY-YYYY" value="{{@$rs_records[0]->year}}" maxlength="10" required onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode == 45) || (event.charCode == 47)'>
-                    </div>              
+                    </div> 
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <span class="fa fa-asterisk"></span>
+                        <select name="unit" id="unit" class="form-control">
+                            <option value="1" {{@$rs_records[0]->area_unit==1?'selected':''}}>Kanal Marla</option>
+                            <option value="2" {{@$rs_records[0]->area_unit==2?'selected':''}}>Bigha Biswa</option>
+                        </select>
+                    </div>             
                 </div>
                 <div class="modal-footer card-footer justify-content-between">
                     <button type="submit" class="btn btn-success form-control">{{ @$rec_id>0? 'Update' : 'Submit' }}</button>

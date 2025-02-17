@@ -17,6 +17,7 @@
                         <th>Award No.</th>
                         <th>Award Date</th>
                         <th>Jamabandi Year</th>
+                        <th>Unit (Land)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,6 +36,7 @@
                         <td>{{ $value->award_no }}</td>
                         <td>{{ $value->award_date }}</td>
                         <td>{{ $value->year }}</td>
+                        <td>{{ $value->unit }}</td>
                     </tr>
                     @endforeach
                 </tbody>

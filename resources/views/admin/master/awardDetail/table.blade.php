@@ -8,7 +8,7 @@
                             <b>Scheme:: <span style="color:green;">{{@$result_rs[0]->scheme_name_e}}</span></b> , 
                         </div>
                         <div class="col-lg-9">
-                            <b>Scheme/Award Village:: <span style="color:green;">{{@$result_rs[0]->tehsil_name}}, {{@$result_rs[0]->vil_name}}, {{@$result_rs[0]->award_no}},  {{@$result_rs[0]->date_of_award}}, {{@$result_rs[0]->year}}</span></b>
+                            <b>Scheme/Award Village:: <span style="color:green;">{{@$result_rs[0]->tehsil_name}}, {{@$result_rs[0]->vil_name}}, {{@$result_rs[0]->award_no}},  {{@$result_rs[0]->date_of_award}}, {{@$result_rs[0]->year}}, {{@$result_rs[0]->unit}}</span></b>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,6 @@
                         <th>Khata No.</th>
                         <th>Mustil No.</th>
                         <th>Khasra No.</th>
-                        <th>Unit</th>
                         <th>Area</th>
                         <th>Land Value</th>
                         <th>Factor Value</th>
@@ -64,7 +63,6 @@
                         <td>{{ $value->khata_no }}</td>
                         <td>{{ $value->mustil_no }}</td>
                         <td>{{ $value->khasra_no }}</td>
-                        <td>{{ $value->unit==1?'Kanal Marla':'Bigha Biswa'}}</td>
                         <td>{{ $value->kanal }} - {{ $value->marla }} - {{ $value->sirsai }}</td>
                         <td>{{ $value->value_sep }}</td>
                         <td>{{ $value->f_value_sep }}</td>
