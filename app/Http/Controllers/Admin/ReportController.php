@@ -133,7 +133,7 @@ class ReportController extends Controller
                     $response["msg"]='Something went wrong';
                     return response()->json($response);
                 }
-                $rs_result = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, case when `ad`.`unit` = 1 then 'Kanal Marla' else 'Bigha Biswa' end as `unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
+                $rs_result = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `uf_get_mustil_khasra_area_detail`(`ad`.`id`, 1) as `mustil_khsra_rakba`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
                 $response = array();
                 $response['status'] = 1;            
                 $response['data'] =view('admin.report.AwardBeneficiaryDetail.result', compact('rs_result', 'tcols', 'qcols', 'show_total_row'))->render();
@@ -243,7 +243,7 @@ class ReportController extends Controller
                 if($is_permission == 0){
                     return 'Something went wrong';
                 }
-                $rs_result = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, case when `ad`.`unit` = 1 then 'Kanal Marla' else 'Bigha Biswa' end as `unit`, concat(`ad`.`kanal`, ' - ' , `ad`.`marla`, ' - ' , `ad`.`sirsai`) as `area`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
+                $rs_result = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `uf_get_mustil_khasra_area_detail`(`ad`.`id`, 1) as `mustil_khsra_rakba`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
                 $html = view('admin.report.AwardBeneficiaryDetail.print', compact('rs_result'));
             }
             

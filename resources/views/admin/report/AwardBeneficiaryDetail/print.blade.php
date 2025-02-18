@@ -31,7 +31,7 @@
                     <tr>
                         <td style="width: 10%;vertical-align:middle;" rowspan="2" align="center">{{$srno++}}</td>
                         <td style="width: 90%;height: 40px;border-bottom: none;">
-                            Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>, Mustil No.: <b>{{$rs_val->mustil_no}}</b>, Khasra No.: <b>{{$rs_val->khasra_no}}</b>, Unit: <b>{{$rs_val->unit}}</b>, Area: <b>{{$rs_val->area}}</b>, Land Value: <b>{{$rs_val->value_sep}}</b>
+                            Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>, Mustil//Khasra (Rakba): <b>{{$rs_val->mustil_khsra_rakba}}</b>, Land Value: <b>{{$rs_val->value_sep}}</b>
                         </td>
                     </tr>
                     <tr>
