@@ -36,26 +36,34 @@
                     <tr>
                         <td style="width: 10%;vertical-align:middle;" rowspan="2" align="center">{{$srno++}}</td>
                         <td style="width: 90%;height: 40px;border-bottom: none;">
-                            Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>
-                            <table style="border-collapse: collapse; width: 100%; height: 54px;text-align: center" border="1">
-                                <thead>
-                                    <tr>
-                                        <th>Mustil//Khasra</th>
-                                        <th>Rakba</th>
-                                        <th>Kanal/Marla</th>
-                                    </tr>
-                                </thead>
+                            <table style="border-collapse: collapse; width: 100%;" border="1">
                                 <tbody>
-                                    @foreach ($rs_mustil_khasra_detail as $rs_mustil_val)
-                                        <tr>
-                                            <td>{{$rs_mustil_val->mustil_no}}//{{$rs_mustil_val->khasra_no}}</td>
-                                            <td>{{$rs_mustil_val->kanal}}-{{$rs_mustil_val->marla}}-{{$rs_mustil_val->sirsai}}</td>
-                                            <td></td>
-                                        </tr>
-                                    @endforeach
+                                    <tr>
+                                        <td style="width: 20%;">Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b></td>
+                                        <td style="width: 60%;">
+                                            <table style="border-collapse: collapse; width: 100%; height: 54px;text-align: center" border="1">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Mustil//Khasra</th>
+                                                        <th>Rakba</th>
+                                                        <th>Kanal/Marla</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($rs_mustil_khasra_detail as $rs_mustil_val)
+                                                    <tr>
+                                                        <td>{{$rs_mustil_val->mustil_no}}//{{$rs_mustil_val->khasra_no}}</td>
+                                                        <td>{{$rs_mustil_val->kanal}}-{{$rs_mustil_val->marla}}-{{$rs_mustil_val->sirsai}}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td style="width: 20%;">Land Value: <b>{{$rs_val->value_sep}}</b></td>
+                                    </tr>
                                 </tbody>
-                            </table>
-                            Land Value: <b>{{$rs_val->value_sep}}
+                            </table>                            
                         </td>
                     </tr>
                     <tr>
