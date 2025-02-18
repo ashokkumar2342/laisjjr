@@ -17,7 +17,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-12">                    
-                    <b>Award Detail:: <span style="color:green;">{{@$rs_scheme_detail[0]->khasra_no}}, {{@$rs_scheme_detail[0]->khata_no}}, {{@$rs_scheme_detail[0]->mustil_no}}//{{@$rs_scheme_detail[0]->khasra_no}}</span></b>, &nbsp;<b>Total Value:: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value}}</span></b>
+                    <b>Award Detail:: <span style="color:green;">{{@$rs_scheme_detail[0]->khewat_no}}, {{@$rs_scheme_detail[0]->khata_no}}, {{@$rs_scheme_detail[0]->mustil_khsra_rakba}}</span></b>, &nbsp;<b>Total Value:: <span style="color:green;">{{@$rs_scheme_detail[0]->total_value}}</span></b>
                 </div>
                 <div class="col-lg-12">
                     <b>Hissa Added:: <span style="color:green;">{{@$rs_total_entered[0]->hissa_added}}</span></b>, &nbsp;<b>Total Value Added:: <span style="color:green;">{{@$rs_total_entered[0]->total_value_added}}</span></b>

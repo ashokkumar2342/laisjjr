@@ -33,9 +33,7 @@
                         <th>Sr. No.</th>                
                         <th>Khewat No.</th>
                         <th>Khata No.</th>
-                        <th>Mustil No.</th>
-                        <th>Khasra No.</th>
-                        <th>Area</th>
+                        <th>Mustil//Khasra (Rakba)</th>
                         <th>Land Value</th>
                         <th>Factor Value</th>
                         <th>Solatium Value</th>
@@ -61,9 +59,7 @@
                         <td>{{ $sr_no++ }}</td>
                         <td>{{ $value->khewat_no }}</td>
                         <td>{{ $value->khata_no }}</td>
-                        <td>{{ $value->mustil_no }}</td>
-                        <td>{{ $value->khasra_no }}</td>
-                        <td>{{ $value->kanal }} - {{ $value->marla }} - {{ $value->sirsai }}</td>
+                        <td>{!! $value->mustil_khasra_rakba !!}</td>
                         <td>{{ $value->value_sep }}</td>
                         <td>{{ $value->f_value_sep }}</td>
                         <td>{{ $value->s_value_sep }}</td>

@@ -859,7 +859,8 @@ class MasterController extends Controller
             if($is_permission == 0){
                 $scheme_award_info_id = 0;
             }
-            $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`mustil_no`, `ad`.`khasra_no`, `ad`.`kanal`, `ad`.`marla`, `ad`.`sirsai`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
+            $rs_records = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep`, `ad`.`status`, `uf_get_mustil_khasra_area_detail`(`ad`.`id`, 2) as `mustil_khasra_rakba` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `ad`.`status` < 3 order by `ad`.`id`;"));  
+
             $result_rs = DB::select(DB::raw("SELECT `sh`.`scheme_name_e`, `th`.`name_e` as `tehsil_name`, `vl`.`name_e` as `vil_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `date_of_award`, `sai`.`year`, case `sai`.`area_unit` when 1 then 'Kanal-Marla' when 2 then 'Bigha-Biswa' else '' end as `unit` from `scheme_award_info` `sai` inner join `schemes` `sh` on `sh`.`id` = `sai`.`scheme_id` inner join `tehsils` `th` on `th`.`id` = `sai`.`tehsil_id` inner join `villages` `vl` on `vl`.`id` = `sai`.`village_id` where `sai`.`id` = $scheme_award_info_id limit 1;"));
             return view('admin.master.awardDetail.table',compact('rs_records', 'scheme_award_info_id', 'result_rs'));
         } catch (Exception $e) {
@@ -899,7 +900,12 @@ class MasterController extends Controller
             }
             
             $rs_records = DB::select(DB::raw("SELECT * from `award_detail` where `id` =  $rec_id limit 1;"));
-            return view('admin.master.awardDetail.add_form',compact('rs_records', 'rec_id', 'scheme_award_info_id', 'unit'));
+            
+            $rs_mustil_khsra_rakba = DB::select(DB::raw("SELECT * from `award_mustil_khasra_detail` where `award_land_detail_id` =  $rec_id and `status` = 0 ;"));
+            if(count($rs_mustil_khsra_rakba) == 0){
+                $rs_mustil_khsra_rakba = DB::select(DB::raw("SELECT 0 as `id`, '' as `mustil_no`, '' as `khasra_no`, '' as `kanal`, '' as `marla`, '' as `sirsai`;"));
+            }
+            return view('admin.master.awardDetail.add_form',compact('rs_records', 'rec_id', 'scheme_award_info_id', 'unit', 'rs_mustil_khsra_rakba'));
         } catch (Exception $e) {
             $e_method = "awardDetailAddForm";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
@@ -908,7 +914,7 @@ class MasterController extends Controller
 
     public function awardDetailStore(Request $request, $rec_id)
     {
-        try { return $request;
+        try { 
             $permission_flag = MyFuncs::isPermission_route(18);
             if(!$permission_flag){
                 $response=['status'=>0,'msg'=>'Something Went Wrong'];
@@ -921,7 +927,6 @@ class MasterController extends Controller
                 'khata_no' => 'required',
                 'mustil_no' => 'required',
                 'khasra_no' => 'required',
-                'unit' => 'required',
                 'kanal' => 'required',
                 'marla' => 'required',
                 'sirsai' => 'required',
@@ -946,12 +951,6 @@ class MasterController extends Controller
             $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info_id));
             $khewat_no = substr(MyFuncs::removeSpacialChr($request->khewat_no), 0, 10);
             $khata_no = substr(MyFuncs::removeSpacialChr($request->khata_no), 0, 10);
-            $mustil_no = substr(MyFuncs::removeSpacialChr($request->mustil_no), 0, 10);
-            $khasra_no = substr(MyFuncs::removeSpacialChr($request->khasra_no), 0, 10);
-            $unit = intval($request->unit);
-            $kanal = substr(MyFuncs::removeSpacialChr($request->kanal), 0, 4);
-            $marla = substr(MyFuncs::removeSpacialChr($request->marla), 0, 4);
-            $sirsai = substr(MyFuncs::removeSpacialChr($request->sirsai), 0, 4);
             $value = floatval(MyFuncs::removeSpacialChr($request->value));
             $factor_value = floatval(MyFuncs::removeSpacialChr($request->factor_value));
             $solatium_value = floatval(MyFuncs::removeSpacialChr($request->solatium_value));
@@ -971,9 +970,38 @@ class MasterController extends Controller
                 return response()->json($response);    
             }
 
-            $rs_save = DB::select(DB::raw("call `up_save_award_land_detail`($user_id, $rec_id, '$scheme_award_info_id', '$khewat_no', '$khata_no', '$mustil_no', '$khasra_no', $unit, '$kanal', '$marla', '$sirsai', '$value', '$factor_value', '$solatium_value', '$additional_charge_value', '$from_ip');"));
-            $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
+            $rs_save = DB::select(DB::raw("call `up_save_award_land_detail`($user_id, $rec_id, '$scheme_award_info_id', '$khewat_no', '$khata_no', '$value', '$factor_value', '$solatium_value', '$additional_charge_value', '$from_ip');"));
+            
 
+            if($rs_save[0]->s_status == 1){
+                $land_award_rec_id = $rs_save[0]->rec_id;
+
+                $rec_id = 0;
+                $in_mustil_no = $request->mustil_no; 
+                $in_khasra_no = $request->khasra_no; 
+                $in_kanal = $request->kanal; 
+                $in_marla = $request->marla; 
+                $in_sirsai = $request->sirsai; 
+                foreach ($request->mustil_no as $key => $value) {
+                    $mustil_no = substr(MyFuncs::removeSpacialChr($in_mustil_no[$key]), 0, 10);
+                    $khasra_no = substr(MyFuncs::removeSpacialChr($in_khasra_no[$key]), 0, 10);
+                    $kanal = intval($in_kanal[$key]);
+                    $marla = intval($in_marla[$key]);
+                    $sirsai = intval($in_sirsai[$key]);
+                    // $rs_insert = DB::select(DB::raw("INSERT into `award_mustil_khasra_detail`(`award_land_detail_id`, `mustil_no`, `khasra_no`, `kanal`, `marla`, `sirsai`) values ($rec_id, '$mustil_no', '$khasra_no', $kanal, $marla, $sirsai);"));        
+                    
+                    $rs_insert = DB::select(DB::raw("call `up_save_mustil_khsra_rakba`($user_id, $rec_id, $land_award_rec_id, '$mustil_no', '$khasra_no', $kanal, $marla, $sirsai, '$from_ip');"));        
+                }
+            }
+
+                
+            // $mustil_no = substr(MyFuncs::removeSpacialChr($request->mustil_no), 0, 10);
+            // $khasra_no = substr(MyFuncs::removeSpacialChr($request->khasra_no), 0, 10);
+            // $kanal = substr(MyFuncs::removeSpacialChr($request->kanal), 0, 4);
+            // $marla = substr(MyFuncs::removeSpacialChr($request->marla), 0, 4);
+            // $sirsai = substr(MyFuncs::removeSpacialChr($request->sirsai), 0, 4);
+            
+            $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
             return response()->json($response);
         } catch (Exception $e) {
             $e_method = "awardDetailStore";

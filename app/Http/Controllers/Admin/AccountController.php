@@ -224,7 +224,7 @@ class AccountController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(2);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $rec_id = intval(Crypt::decrypt($rec_id));
             $rs_fatch = DB::select(DB::raw("SELECT `status`, `email` from `admins` where `id` = $rec_id limit 1;"));
@@ -257,7 +257,7 @@ class AccountController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(3);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             return view('admin.account.change_password');
         } catch (\Exception $e) {
@@ -339,7 +339,7 @@ class AccountController extends Controller
         try {
             $permission_flag = MyFuncs::isPermission_route(4);
             if(!$permission_flag){
-                return view('admin.common.error')
+                return view('admin.common.error');
             }
             $userid = MyFuncs::getUserId();
             $role_id = MyFuncs::getUserRoleId();

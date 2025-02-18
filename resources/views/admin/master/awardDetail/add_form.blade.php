@@ -23,77 +23,52 @@
                             <input type="text" name="khata_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khata_no}}"> 
                         </div>
                     </div>
-                    {{-- <div class="row">
-                        <div class="col-lg-6 form-group">
-                            <label>Mustil No.</label>
-                            <span class="fa fa-asterisk"></span>
-                            <input type="text" name="mustil_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->mustil_no}}"> 
-                        </div>
-                        <div class="col-lg-6 form-group">
-                            <label>Khasra No.</label>
-                            <span class="fa fa-asterisk"></span>
-                            <input type="text" name="khasra_no" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khasra_no}}"> 
-                        </div>
-                    </div> --}}
-                    <div class="row" id="dilw">
-                        <div class="col-md-12 form_sec_outer_task">
-                            <div class="col-md-12 p-0">
-                                <div class="col-md-12 form_field_outer p-0">
-                                    <div class="row form_field_outer_row border" style="border: solid #5f97cf;">
-                                        <div class="col-lg-6 form-group">
-                                            <label>Mustil No.</label>
-                                            <span class="fa fa-asterisk"></span>
-                                            <input type="text" name="mustil_no[]" class="form-control" maxlength="10" required value="{{@$rs_records[0]->mustil_no}}"> 
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label>Khasra No.</label>
-                                            <span class="fa fa-asterisk"></span>
-                                            <input type="text" name="khasra_no[]" class="form-control" maxlength="10" required value="{{@$rs_records[0]->khasra_no}}"> 
-                                        </div>
-                                        <div class="col-lg-4 form-group">
-                                            <label id="label1">{{$unit==1?'Kanal':'Bigha'}}</label>
-                                            <span class="fa fa-asterisk"></span>
-                                            <input type="text" name="kanal[]" class="form-control" maxlength="5" required value="{{@$rs_records[0]->kanal}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                                        </div>
-                                        <div class="col-lg-4 form-group">
-                                            <label id="label2">{{$unit==1?'Marla':'Biswa'}}</label>
-                                            <span class="fa fa-asterisk"></span>
-                                            <input type="text" name="marla[]" class="form-control" maxlength="5" required value="{{@$rs_records[0]->marla}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                                        </div>
-                                        <div class="col-lg-4 form-group">
-                                            <label id="label3">{{$unit==1?'Sarsai':'Biswansi'}}</label>
-                                            <span class="fa fa-asterisk"></span>
-                                            <input type="text" name="sirsai[]" class="form-control" maxlength="5" required value="{{@$rs_records[0]->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                                        </div>
-                                        <div class="col-lg-12 form-group text-right form-group add_del_btn_outer">
-                                            <button type="button" class="add_node_btn_frm_field btn btn-sm" title="Copy or clone this row">
-                                                <i class="fa fa-plus-circle text-success"></i>
-                                            </button>
-                                            <button type="button" class="remove_node_btn_frm_field btn btn-sm" disabled>
-                                                <i class="fa fa-trash text-danger"></i>
-                                            </button>
+                    @foreach ($rs_mustil_khsra_rakba as $element)
+                        <div class="row" id="dilw">
+                            <div class="col-md-12 form_sec_outer_task">
+                                <div class="col-md-12 p-0">
+                                    <div class="col-md-12 form_field_outer p-0">
+                                        <div class="row form_field_outer_row border" style="border: solid #5f97cf;">
+                                            <div class="col-lg-6 form-group">
+                                                <label>Mustil No.</label>
+                                                <span class="fa fa-asterisk"></span>
+                                                <input type="text" name="mustil_no[]" class="form-control" maxlength="10" required value="{{@$element->mustil_no}}"> 
+                                            </div>
+                                            <div class="col-lg-6 form-group">
+                                                <label>Khasra No.</label>
+                                                <span class="fa fa-asterisk"></span>
+                                                <input type="text" name="khasra_no[]" class="form-control" maxlength="10" required value="{{@$element->khasra_no}}"> 
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label id="label1">{{$unit==1?'Kanal':'Bigha'}}</label>
+                                                <span class="fa fa-asterisk"></span>
+                                                <input type="text" name="kanal[]" class="form-control" maxlength="5" required value="{{@$element->kanal}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label id="label2">{{$unit==1?'Marla':'Biswa'}}</label>
+                                                <span class="fa fa-asterisk"></span>
+                                                <input type="text" name="marla[]" class="form-control" maxlength="5" required value="{{@$element->marla}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
+                                            </div>
+                                            <div class="col-lg-4 form-group">
+                                                <label id="label3">{{$unit==1?'Sarsai':'Biswansi'}}</label>
+                                                <span class="fa fa-asterisk"></span>
+                                                <input type="text" name="sirsai[]" class="form-control" maxlength="5" required value="{{@$element->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
+                                            </div>
+                                            <div class="col-lg-12 form-group text-right form-group add_del_btn_outer">
+                                                <button type="button" class="add_node_btn_frm_field btn btn-sm" title="Copy or clone this row">
+                                                    <i class="fa fa-plus-circle text-success"></i>
+                                                </button>
+                                                <button type="button" class="remove_node_btn_frm_field btn btn-sm" disabled>
+                                                    <i class="fa fa-trash text-danger"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                     <div class="row">
-                        {{-- <div class="col-lg-4 form-group">
-                            <label id="label1">{{$unit==1?'Kanal':'Bigha'}}</label>
-                            <span class="fa fa-asterisk"></span>
-                            <input type="text" name="kanal" class="form-control" maxlength="5" required value="{{@$rs_records[0]->kanal}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                        </div>
-                        <div class="col-lg-4 form-group">
-                            <label id="label2">{{$unit==1?'Marla':'Biswa'}}</label>
-                            <span class="fa fa-asterisk"></span>
-                            <input type="text" name="marla" class="form-control" maxlength="5" required value="{{@$rs_records[0]->marla}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                        </div>
-                        <div class="col-lg-4 form-group">
-                            <label id="label3">{{$unit==1?'Sarsai':'Biswansi'}}</label>
-                            <span class="fa fa-asterisk"></span>
-                            <input type="text" name="sirsai" class="form-control" maxlength="5" required value="{{@$rs_records[0]->sirsai}}" onkeypress="return event.charCode >= 48 && event.charCode <= 57"> 
-                        </div> --}}
                         <div class="col-lg-6 form-group">
                             <label>Land Value</label>
                             <span class="fa fa-asterisk"></span>
@@ -169,32 +144,6 @@ $(document).ready(function () {
     });
 });
 </script>
-{{-- <script>
-    $(document).ready(function(){ $("#dilw").on("click",".add_new_frm_field_btn", function (){ console.log("clicked"); var index = $(".form_field_outer").find(".form_field_outer_row").length + 1; $(".form_field_outer").append(`
-        <div class="row form_field_outer_row">
-        <div class="form-group col-md-6">
-        <input type="text" class="form-control w_90" name="mobileb_no[]" id="mobileb_no_${index}" placeholder="Enter mobiel no." />
-        </div>
-        <div class="form-group col-md-4">
-        <select name="no_type[]" id="no_type_${index}" class="form-control">
-        <option>--Select type--</option>
-        <option>Personal No.</option>
-        <option>Company No.</option>
-        <option>Parents No.</option>
-        </select>
-        </div>
-        <div class="form-group col-md-2 add_del_btn_outer">
-        <button class="btn_round add_node_btn_frm_field" title="Copy or clone this row">
-        <i class="fas fa-copy"></i>
-        </button>
-
-        <button class="btn_round remove_node_btn_frm_field" disabled>
-        <i class="fas fa-trash-alt"></i>
-        </button>
-        </div>
-        </div>
-        `); $(".form_field_outer").find(".remove_node_btn_frm_field:not(:first)").prop("disabled", false); $(".form_field_outer").find(".remove_node_btn_frm_field").first().prop("disabled", true); }); });
-</script> --}}
 <script>
     $(document).ready(function () {
         //===== delete the form fieed row
