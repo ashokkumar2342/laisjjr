@@ -14,10 +14,12 @@
     		</div>
     	</htmlpagefooter>
     	<htmlpageheader name="otherpageheader" style="display:none">
-            <table style="width:100%;background-color:LightGray;">
+            <table style="border-collapse: collapse; width: 100%;background-color:#001f3f;color:#fff">
                 <tbody>
                     <tr>
-                        <td style="text-align: center;"><b>Award Beneficiary Detail</b></td>
+                        <td style="text-align: center;"><b>Scheme:: <span style="color:#29ef29;">{{@$rs_pageheader[0]->scheme_name_e}}</span></b></td>
+                        <td style="text-align: center;"><b>Scheme/Award Village:: <span style="color:#29ef29;">{{@$rs_pageheader[0]->tehsil_name}}, {{@$rs_pageheader[0]->vil_name}}, {{@$rs_pageheader[0]->award_no}},  {{@$rs_pageheader[0]->date_of_award}}, {{@$rs_pageheader[0]->year}}</span></td>
+                        <td style="text-align: center;"><b>Unit:: <span style="color:#29ef29;">{{@$rs_pageheader[0]->unit}}</span></b></td>
                     </tr>
                 </tbody>
             </table> 
@@ -28,10 +30,32 @@
             @endphp
             <tbody>
                 @foreach ($rs_result as $rs_val)
+                @php
+                    $rs_mustil_khasra_detail = DB::select(DB::raw("SELECT `mustil_no`, `khasra_no`, `kanal`, `marla`, `sirsai` from `award_mustil_khasra_detail` where `award_land_detail_id` = $rs_val->id and `status` = 0 order by `id`;"));
+                @endphp
                     <tr>
                         <td style="width: 10%;vertical-align:middle;" rowspan="2" align="center">{{$srno++}}</td>
                         <td style="width: 90%;height: 40px;border-bottom: none;">
-                            Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>, Mustil//Khasra (Rakba): <b>{{$rs_val->mustil_khsra_rakba}}</b>, Land Value: <b>{{$rs_val->value_sep}}</b>
+                            Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b>
+                            <table style="border-collapse: collapse; width: 100%; height: 54px;text-align: center" border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Mustil//Khasra</th>
+                                        <th>Rakba</th>
+                                        <th>Kanal/Marla</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($rs_mustil_khasra_detail as $rs_mustil_val)
+                                        <tr>
+                                            <td>{{$rs_mustil_val->mustil_no}}//{{$rs_mustil_val->khasra_no}}</td>
+                                            <td>{{$rs_mustil_val->kanal}}-{{$rs_mustil_val->marla}}-{{$rs_mustil_val->sirsai}}</td>
+                                            <td></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            Land Value: <b>{{$rs_val->value_sep}}
                         </td>
                     </tr>
                     <tr>

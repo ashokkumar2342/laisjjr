@@ -243,8 +243,10 @@ class ReportController extends Controller
                 if($is_permission == 0){
                     return 'Something went wrong';
                 }
+                $rs_pageheader = DB::select(DB::raw("SELECT `sh`.`scheme_name_e`, `th`.`name_e` as `tehsil_name`, `vl`.`name_e` as `vil_name`, `sai`.`award_no`, date_format(`sai`.`award_date`, '%d-%m-%Y') as `date_of_award`, `sai`.`year`, case `sai`.`area_unit` when 1 then 'Kanal-Marla' when 2 then 'Bigha-Biswa' else '' end as `unit` from `scheme_award_info` `sai` inner join `schemes` `sh` on `sh`.`id` = `sai`.`scheme_id` inner join `tehsils` `th` on `th`.`id` = `sai`.`tehsil_id` inner join `villages` `vl` on `vl`.`id` = `sai`.`village_id` where `sai`.`id` = $scheme_award_info_id limit 1;"));
+
                 $rs_result = DB::select(DB::raw("SELECT `ad`.`id`, `ad`.`khewat_no`, `ad`.`khata_no`, `uf_get_mustil_khasra_area_detail`(`ad`.`id`, 1) as `mustil_khsra_rakba`, `ad`.`value_sep`, `ad`.`f_value_sep`, `ad`.`s_value_sep`, `ad`.`ac_value_sep`, `ad`.`t_value_sep` from `award_detail` `ad` where `scheme_award_info_id` = $scheme_award_info_id and `status` < 2 order by `ad`.`id`;"));
-                $html = view('admin.report.AwardBeneficiaryDetail.print', compact('rs_result'));
+                $html = view('admin.report.AwardBeneficiaryDetail.print', compact('rs_result', 'rs_pageheader'));
             }
             
             
