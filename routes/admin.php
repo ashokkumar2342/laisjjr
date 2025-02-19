@@ -118,9 +118,8 @@ Route::group(['middleware' => ['preventBackHistory','admin','web']], function() 
 	    Route::post('award-detail-update/{rec_id}', 'MasterController@awardDetailUpdate')->name('admin.master.award.detail.update');
 	    Route::get('award-detail-edit-popup/{rec_id}', 'MasterController@awardDetailEditPopup')->name('admin.master.award.detail.edit.popup');
 	    Route::post('award-detail-update-popup/{rec_id}', 'MasterController@awardDetailUpdatePopup')->name('admin.master.award.detail.update.popup');
-
-
 	    Route::get('award-detail-delete/{rec_id}', 'MasterController@awardDetailDelete')->name('admin.master.award.detail.delete');
+	    Route::get('award-detail-popup-delete/{rec_id}', 'MasterController@awardDetailPopupDelete')->name('admin.master.award.detail.popup.delete');
 	    Route::get('award-beneficiary-view/{rec_id}', 'MasterController@awardBeneficiaryView')->name('admin.master.award.beneficiary.view');
 
 	    //Award Detail File

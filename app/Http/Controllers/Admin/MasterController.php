@@ -1097,7 +1097,7 @@ class MasterController extends Controller
             $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
             return response()->json($response);
         } catch (Exception $e) {
-            $e_method = "awardDetailStore";
+            $e_method = "awardDetailUpdate";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
     }
@@ -1137,7 +1137,7 @@ class MasterController extends Controller
 
             return view('admin.master.awardDetail.edit_popup',compact('rec_id', 'unit', 'rs_mustil_khsra_rakba', 'award_land_detail_id'));
         } catch (Exception $e) {
-            $e_method = "awardDetailEdit";
+            $e_method = "awardDetailEditPopup";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
     }
@@ -1184,7 +1184,7 @@ class MasterController extends Controller
             $response=['status'=>1,'msg'=>'Save Successfully'];
             return response()->json($response);
         } catch (Exception $e) {
-            $e_method = "awardDetailStore";
+            $e_method = "awardDetailUpdatePopup";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
     }
@@ -1215,6 +1215,39 @@ class MasterController extends Controller
             return response()->json($response);   
         } catch (\Exception $e) {
             $e_method = "awardDetailDelete";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
+    public function awardDetailPopupDelete($rec_id)
+    {
+        try {
+            $rec_id = intval(Crypt::decrypt($rec_id));
+
+            if($rec_id > 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `award_land_detail_id` from `award_mustil_khasra_detail` where `id` =  $rec_id limit 1;"));
+                $award_land_detail_id = $rs_fetch[0]->award_land_detail_id;
+
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $award_land_detail_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }
+            }
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);
+            }
+
+            $user_id = MyFuncs::getUserId();
+            $from_ip = MyFuncs::getIp();
+
+            $rs_delete = DB::select(DB::raw("DELETE from `award_mustil_khasra_detail` where `id` = $rec_id limit 1;"));
+            $response=['status'=>1,'msg'=>'Deleted Successfully'];
+            return response()->json($response);  
+        } catch (\Exception $e) {
+            $e_method = "awardDetailPopupDelete";
             return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
         }
     }

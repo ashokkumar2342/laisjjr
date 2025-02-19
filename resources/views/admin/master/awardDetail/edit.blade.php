@@ -49,8 +49,8 @@
                         </div>
                     </div>
                     <div class="modal-footer card-footer justify-content-between">
-                        <button type="submit" class="btn btn-success form-control">{{ @$rec_id>0? 'Update' : 'Submit' }}</button>
-                        <button type="button" class="btn btn-danger form-control" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-success form-control">{{ @$rec_id>0? 'Update' : 'Submit' }}</button>
+                        <button type="button" class="btn btn-sm btn-danger form-control" data-dismiss="modal">Close</button>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -61,7 +61,7 @@
                                         <ul class="nav nav-pills ml-auto">
                                             <li class="nav-item">
                                                 
-                                                <button type="button" class="btn btn-info btn-sm" select2="true" onclick="callPopupLevel2(this,'{{ route('admin.master.award.detail.edit.popup', Crypt::encrypt(0)) }}'+'?land_award_rec_id={{Crypt::encrypt(@$rs_records[0]->id)}}')">Mustil//Khasra (Rakba)</button>
+                                                <button type="button" class="btn btn-info btn-xs" select2="true" onclick="callPopupLevel2(this,'{{ route('admin.master.award.detail.edit.popup', Crypt::encrypt(0)) }}'+'?land_award_rec_id={{Crypt::encrypt(@$rs_records[0]->id)}}')">Mustil//Khasra (Rakba)</button>
                                                 
                                             </li>
                                         </ul>
@@ -71,25 +71,27 @@
                                     <table class="table table-bordered table-striped table-hover" id="dataTable">
                                         <thead class="bg-dark">
                                             <tr>
+                                                <th>Action</th>                                                
                                                 <th>Mustil No.</th>
                                                 <th>Khasra No.</th>
                                                 <th>{{$unit==1?'Kanal':'Bigha'}}</th>
                                                 <th>{{$unit==1?'Marla':'Biswa'}}</th>
                                                 <th>{{$unit==1?'Sarsai':'Biswansi'}}</th>
-                                                <th>Action</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($rs_mustil_khsra_rakba as $val_rs)
                                             <tr>
+                                                <td class="text-nowrap">
+                                                    <button type="button" class="btn btn-info btn-xs" select2="true" select-triger="unit" onclick="callPopupLevel2(this,'{{ route('admin.master.award.detail.edit.popup', Crypt::encrypt($val_rs->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
+                                                    
+                                                    <button type="button" select-triger="scheme_award_select_box" class="btn btn-xs btn-danger" button-click="btn_edit_{{@$rs_records[0]->id}}" success-popup="true" onclick="if (confirm('Are you sure you want to delete this record?')){callAjax(this,'{{ route('admin.master.award.detail.popup.delete', Crypt::encrypt($val_rs->id)) }}') } else{console_Log('cancel') }">Delete</button>
+                                                </td>
                                                 <td>{{$val_rs->mustil_no}}</td>
                                                 <td>{{$val_rs->khasra_no}}</td>
                                                 <td>{{$val_rs->kanal}}</td>
                                                 <td>{{$val_rs->marla}}</td>
                                                 <td>{{$val_rs->sirsai}}</td>
-                                                <td>
-                                                    <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLevel2(this,'{{ route('admin.master.award.detail.edit.popup', Crypt::encrypt($val_rs->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
-                                                </td>
                                                 
                                             </tr>
                                             @endforeach

@@ -44,6 +44,105 @@
 </section>
 @endsection
 @push('scripts')
-    
+    <script>
+        function getTranslatedata() {
+            var name_e = $("#name_1_e").val(); 
+            if ($("#name_1_l").val().length !=0) {
+
+            }else{
+                $.ajax({
+                    dataType: "json",
+                    url: "{{route('admin.common.getTranslateData')}}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "name_e": name_e
+                    },
+                    type: "GET",
+                    success: function(data) {              
+                        if(data.st==1){
+                            var n = data.msg.split('|');
+                            $("#name_1_l").val(n[0]);
+
+                        } else if(data.st==0){
+                            alert('ok');
+                        }
+                    }
+                })
+            }    
+        }
+    </script>
+    <script>
+        function getTranslatedata2() {
+            var name_e = $("#name_2_e").val(); 
+            if ($("#name_2_l").val().length !=0) {
+
+            }else{
+                $.ajax({
+                    dataType: "json",
+                    url: "{{route('admin.common.getTranslateData')}}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "name_e": name_e
+                    },
+                    type: "GET",
+                    success: function(data) {              
+                        if(data.st==1){
+                            var n = data.msg.split('|');
+                            $("#name_2_l").val(n[0]);
+
+                        } else if(data.st==0){
+                            alert('ok');
+                        }
+                    }
+                })
+            }    
+        }
+    </script>
+    <script>
+        function getTranslatedata3() {
+            var name_e = $("#name_3_e").val(); 
+            if ($("#name_3_l").val().length !=0) {
+
+            }else{
+                $.ajax({
+                    dataType: "json",
+                    url: "{{route('admin.common.getTranslateData')}}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "name_e": name_e
+                    },
+                    type: "GET",
+                    success: function(data) {              
+                        if(data.st==1){
+                            var n = data.msg.split('|');
+                            $("#name_3_l").val(n[0]);
+
+                        } else if(data.st==0){
+                            alert('ok');
+                        }
+                    }
+                })
+            }    
+        }
+    </script> 
+    <script>
+        function NameFill(val, id, fill_id) {
+            if(fill_id == 1){
+               $("#name_1_l").val(''); 
+               $("#name_1_l").val(val); 
+            }
+            if(fill_id == 2){
+               $("#name_2_l").val(''); 
+               $("#name_2_l").val(val); 
+            }
+            if(fill_id == 3){
+               $("#name_3_l").val(''); 
+               $("#name_3_l").val(val); 
+            }
+            
+            $("#btn_close_1").click();
+            callAjax(this,'{{ route('admin.common.getTraDataPopUpdate') }}'+'?dic_id='+id);
+        }
+    </script>
 @endpush
 

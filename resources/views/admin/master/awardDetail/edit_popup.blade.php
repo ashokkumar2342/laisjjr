@@ -40,8 +40,8 @@
                     </div>                        
                 </div>
                 <div class="modal-footer card-footer justify-content-between">
-                    <button type="submit" class="btn btn-success form-control">{{ @$rec_id>0? 'Update' : 'Submit' }}</button>
-                    <button type="button" class="btn btn-danger form-control" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-xs btn-success form-control">{{ @$rec_id>0? 'Update' : 'Submit' }}</button>
+                    <button type="button" class="btn btn-xs btn-danger form-control" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
