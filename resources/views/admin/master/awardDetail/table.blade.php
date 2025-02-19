@@ -49,7 +49,7 @@
                     <tr>
                         <td class="text-nowrap">
                             @if ($value->status < 2)
-                                <button type="button" class="btn btn-info btn-sm" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.addform', Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
+                                <button type="button" class="btn btn-info btn-sm" id="btn_edit_{{$value->id}}" select2="true" select-triger="unit" onclick="callPopupLarge(this,'{{ route('admin.master.award.detail.edit', Crypt::encrypt($value->id)) }}')"><i class="fa fa-edit"></i> Edit</button>
 
                                 <button type="button" class="btn btn-sm btn-danger" select-triger="scheme_award_select_box" success-popup="true" onclick="if (confirm('Are you sure you want to delete this record?')){callAjax(this,'{{ route('admin.master.award.detail.delete', Crypt::encrypt($value->id)) }}') } else{console_Log('cancel') }">Delete</button>
                             @endif

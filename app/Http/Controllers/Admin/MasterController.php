@@ -988,20 +988,200 @@ class MasterController extends Controller
                     $kanal = intval($in_kanal[$key]);
                     $marla = intval($in_marla[$key]);
                     $sirsai = intval($in_sirsai[$key]);
-                    // $rs_insert = DB::select(DB::raw("INSERT into `award_mustil_khasra_detail`(`award_land_detail_id`, `mustil_no`, `khasra_no`, `kanal`, `marla`, `sirsai`) values ($rec_id, '$mustil_no', '$khasra_no', $kanal, $marla, $sirsai);"));        
-                    
-                    $rs_insert = DB::select(DB::raw("call `up_save_mustil_khsra_rakba`($user_id, $rec_id, $land_award_rec_id, '$mustil_no', '$khasra_no', $kanal, $marla, $sirsai, '$from_ip');"));        
+                    $rs_insert = DB::select(DB::raw("call `up_save_mustil_khsra_rakba`($user_id, $rec_id, $land_award_rec_id, '$mustil_no', '$khasra_no', $kanal, $marla, $sirsai, '$from_ip');"));
                 }
+            }            
+            $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
+            return response()->json($response);
+        } catch (Exception $e) {
+            $e_method = "awardDetailStore";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
+    public function awardDetailEdit(Request $request, $rec_id)
+    { 
+        try {
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                return view('admin.common.error_popup');
+            }
+            $rec_id = intval(Crypt::decrypt($rec_id));
+            if($rec_id == 0){
+                $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info));
+            }else{
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $rec_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }    
             }
 
-                
-            // $mustil_no = substr(MyFuncs::removeSpacialChr($request->mustil_no), 0, 10);
-            // $khasra_no = substr(MyFuncs::removeSpacialChr($request->khasra_no), 0, 10);
-            // $kanal = substr(MyFuncs::removeSpacialChr($request->kanal), 0, 4);
-            // $marla = substr(MyFuncs::removeSpacialChr($request->marla), 0, 4);
-            // $sirsai = substr(MyFuncs::removeSpacialChr($request->sirsai), 0, 4);
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $error_message = 'Something Went Wrong';
+                return view('admin.common.error_popup', compact('error_message'));    
+            }
+
+            $rs_fetch = DB::select(DB::raw("SELECT `area_unit` from `scheme_award_info` where `id` =  $scheme_award_info_id limit 1;"));
+            $unit = 1;
+            if(count($rs_fetch) > 0){
+                $unit = $rs_fetch[0]->area_unit;
+            }
             
+            $rs_records = DB::select(DB::raw("SELECT * from `award_detail` where `id` =  $rec_id limit 1;"));
+            
+            $rs_mustil_khsra_rakba = DB::select(DB::raw("SELECT * from `award_mustil_khasra_detail` where `award_land_detail_id` =  $rec_id and `status` = 0 ;"));
+
+            return view('admin.master.awardDetail.edit',compact('rs_records', 'rec_id', 'scheme_award_info_id', 'unit', 'rs_mustil_khsra_rakba'));
+        } catch (Exception $e) {
+            $e_method = "awardDetailEdit";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
+    public function awardDetailUpdate(Request $request, $rec_id)
+    {
+        try { 
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
+            $rec_id = intval(Crypt::decrypt($rec_id));
+            $rules=[
+                'scheme_award_info_id' => 'required',
+                'khewat_no' => 'required',
+                'khata_no' => 'required',
+                'value' => 'required',
+                'factor_value' => 'required',
+                'solatium_value' => 'required',
+                'additional_charge_value' => 'required',
+            ];
+            $customMessages = [
+                'scheme_award_info_id.required'=> 'Something went wrong',
+            ];
+            $validator = Validator::make($request->all(),$rules, $customMessages);
+            if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                $response=array();
+                $response["status"]=0;
+                $response["msg"]=$errors[0];
+                return response()->json($response);// response as json
+            }
+            $user_id = MyFuncs::getUserId();
+            $from_ip = MyFuncs::getIp();
+            $scheme_award_info_id = intval(Crypt::decrypt($request->scheme_award_info_id));
+            $khewat_no = substr(MyFuncs::removeSpacialChr($request->khewat_no), 0, 10);
+            $khata_no = substr(MyFuncs::removeSpacialChr($request->khata_no), 0, 10);
+            $value = floatval(MyFuncs::removeSpacialChr($request->value));
+            $factor_value = floatval(MyFuncs::removeSpacialChr($request->factor_value));
+            $solatium_value = floatval(MyFuncs::removeSpacialChr($request->solatium_value));
+            $additional_charge_value = floatval(MyFuncs::removeSpacialChr($request->additional_charge_value));
+            $total_value = $value+$factor_value+$solatium_value+$additional_charge_value;
+
+            if($rec_id > 0){
+                $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $rec_id limit 1;"));
+                $scheme_award_info_id = 0;
+                if(count($rs_fetch) > 0){
+                    $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+                }    
+            }
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);    
+            }
+
+            $rs_save = DB::select(DB::raw("call `up_save_award_land_detail`($user_id, $rec_id, '$scheme_award_info_id', '$khewat_no', '$khata_no', '$value', '$factor_value', '$solatium_value', '$additional_charge_value', '$from_ip');"));                      
             $response=['status'=>$rs_save[0]->s_status,'msg'=>$rs_save[0]->result];
+            return response()->json($response);
+        } catch (Exception $e) {
+            $e_method = "awardDetailStore";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
+    public function awardDetailEditPopup(Request $request, $rec_id)
+    { 
+        try {
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                return view('admin.common.error_popup');
+            }
+            $rec_id = intval(Crypt::decrypt($rec_id));
+
+            if ($rec_id == 0) {
+                $award_land_detail_id = intval(Crypt::decrypt($request->land_award_rec_id));
+            }else{
+                $rs_fetch = DB::select(DB::raw("SELECT `award_land_detail_id` from `award_mustil_khasra_detail` where `id` =  $rec_id limit 1;"));
+                $award_land_detail_id = $rs_fetch[0]->award_land_detail_id;
+            }
+            
+            $rs_fetch = DB::select(DB::raw("SELECT `scheme_award_info_id` from `award_detail` where `id` =  $award_land_detail_id limit 1;"));
+                $scheme_award_info_id = $rs_fetch[0]->scheme_award_info_id;
+            
+            $is_permission = MyFuncs::check_scheme_info_village_access($scheme_award_info_id);
+            if($is_permission == 0){
+                $error_message = 'Something Went Wrong';
+                return view('admin.common.error_popup', compact('error_message'));    
+            }
+
+            $rs_fetch = DB::select(DB::raw("SELECT `area_unit` from `scheme_award_info` where `id` =  $scheme_award_info_id limit 1;"));
+            $unit = 1;
+            if(count($rs_fetch) > 0){
+                $unit = $rs_fetch[0]->area_unit;
+            }
+
+            $rs_mustil_khsra_rakba = DB::select(DB::raw("SELECT * from `award_mustil_khasra_detail` where `id` =  $rec_id and `status` = 0 limit 1;"));
+
+            return view('admin.master.awardDetail.edit_popup',compact('rec_id', 'unit', 'rs_mustil_khsra_rakba', 'award_land_detail_id'));
+        } catch (Exception $e) {
+            $e_method = "awardDetailEdit";
+            return MyFuncs::Exception_error_handler($this->e_controller, $e_method, $e->getMessage());
+        }
+    }
+
+    public function awardDetailUpdatePopup(Request $request, $rec_id)
+    {
+        try { 
+            $permission_flag = MyFuncs::isPermission_route(18);
+            if(!$permission_flag){
+                $response=['status'=>0,'msg'=>'Something Went Wrong'];
+                return response()->json($response);// response as json
+            }
+            $rec_id = intval(Crypt::decrypt($rec_id));
+            $rules=[
+                'land_award_rec_id' => 'required',
+                'mustil_no' => 'required',
+                'khasra_no' => 'required',
+                'kanal' => 'required',
+                'marla' => 'required',
+                'sirsai' => 'required',
+            ];
+            $customMessages = [
+                'land_award_rec_id.required'=> 'Something went wrong',
+            ];
+            $validator = Validator::make($request->all(),$rules, $customMessages);
+            if ($validator->fails()) {
+                $errors = $validator->errors()->all();
+                $response=array();
+                $response["status"]=0;
+                $response["msg"]=$errors[0];
+                return response()->json($response);// response as json
+            }
+            $user_id = MyFuncs::getUserId();
+            $from_ip = MyFuncs::getIp();
+            $land_award_rec_id = intval(Crypt::decrypt($request->land_award_rec_id));
+            $mustil_no = substr(MyFuncs::removeSpacialChr($request->mustil_no), 0, 10);
+            $khasra_no = substr(MyFuncs::removeSpacialChr($request->khasra_no), 0, 10);
+            $kanal = intval($request->kanal);
+            $marla = intval($request->marla);
+            $sirsai = intval($request->sirsai);
+
+            $rs_insert = DB::select(DB::raw("call `up_save_mustil_khsra_rakba`($user_id, $rec_id, $land_award_rec_id, '$mustil_no', '$khasra_no', $kanal, $marla, $sirsai, '$from_ip');"));
+                  
+            $response=['status'=>1,'msg'=>'Save Successfully'];
             return response()->json($response);
         } catch (Exception $e) {
             $e_method = "awardDetailStore";
