@@ -35,12 +35,12 @@
                 @endphp
                     <tr>
                         <td style="width: 10%;vertical-align:middle;" rowspan="2" align="center">{{$srno++}}</td>
-                        <td style="width: 90%;height: 40px;border-bottom: none;">
+                        <td style="width: 90%;height: 40px;">
                             <table style="border-collapse: collapse; width: 100%;" border="1">
                                 <tbody>
                                     <tr>
-                                        <td style="width: 20%;">Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b></td>
-                                        <td style="width: 60%;">
+                                        <td style="width: 28%;"> &nbsp; Khewat No.: <b>{{$rs_val->khewat_no}}</b>, Khata No.: <b>{{$rs_val->khata_no}}</b></td>
+                                        <td style="width: 44%;">
                                             <table style="border-collapse: collapse; width: 100%; height: 54px;text-align: center" border="1">
                                                 <thead>
                                                     <tr>
@@ -60,7 +60,7 @@
                                                 </tbody>
                                             </table>
                                         </td>
-                                        <td style="width: 20%;">Land Value: <b>{{$rs_val->value_sep}}</b></td>
+                                        <td style="width: 28%;"> &nbsp; Land Value: <b>{{$rs_val->value_sep}}</b></td>
                                     </tr>
                                 </tbody>
                             </table>                            
@@ -72,16 +72,24 @@
                                 $rs_records = DB::select(DB::raw("SELECT `abd`.`name_complete_l`, concat(`abd`.`hissa_numerator`,'/',`abd`.`hissa_denominator`) as `hissa`, `abd`.`value_txt` from `award_beneficiary_detail` `abd` where `award_detail_id` = $rs_val->id order by `abd`.`id`;"));
                             @endphp
                             <table style="border-collapse: collapse; width: 100%;" border="1">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%;">Sr. No.</th>
+                                        <th style="width: 50%;">Name</th>
+                                        <th style="width: 20%;">Hissa</th>
+                                        <th style="width: 20%;">Value</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @php
                                         $b_srno = 1;
                                     @endphp
                                     @foreach ($rs_records as $rs_val_rec)
                                         <tr>
-                                            <td style="width: 10%;height: 30px;padding-left: 5px;">{{$b_srno++}}</td>
-                                            <td style="width: 30%;padding-left: 5px;">{{$rs_val_rec->name_complete_l}}</td>
-                                            <td style="width: 30%;text-align: center;">{{$rs_val_rec->hissa}}</td>
-                                            <td style="width: 30%;text-align: right;padding-right: 5px;">{{$rs_val_rec->value_txt}}</td>
+                                            <td style="height: 30px;padding-left: 5px;text-align:center;">{{$b_srno++}}</td>
+                                            <td style="padding-left: 5px;">{{$rs_val_rec->name_complete_l}}</td>
+                                            <td style="text-align: center;">{{$rs_val_rec->hissa}}</td>
+                                            <td style="text-align: right;padding-right: 5px;">{{$rs_val_rec->value_txt}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
