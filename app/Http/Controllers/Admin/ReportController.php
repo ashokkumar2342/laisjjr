@@ -158,7 +158,7 @@ class ReportController extends Controller
             $fontDirs = $defaultConfig['fontDir']; 
             $defaultFontConfig = (new \Mpdf\Config\FontVariables())->getDefaults();
             $fontData = $defaultFontConfig['fontdata']; 
-            $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' =>'A4-L',
+            $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' =>'A4-P',
                 'fontDir' => array_merge($fontDirs, [
                     __DIR__ . $path,
                 ]),
